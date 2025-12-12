@@ -1,8 +1,16 @@
 ---
 import Navegation from "../components/Navegation.astro";
+import '../style/style.css';
+import type { Language } from '../i18n/utils';
+
+interface Props {
+	lang?: Language;
+}
+
+const { lang = 'en' } = Astro.props;
 ---
 
-<html lang="en">
+<html lang={lang}>
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -11,29 +19,8 @@ import Navegation from "../components/Navegation.astro";
 		<title>Astro</title>
 	</head>
 	<body>
-		<header>
-			<Navegation/>
-		</header>
+		<Navegation lang={lang} />
 		<slot/>
 	</body>
 </html>
 
-<style is:global>
-:root{
-    --bg: #0B1220;
-    --surface: #111827;
-    --surface-elev: #1B2530;
-    --text: #FFFFFF;
-    --text-muted: #9AA4B2;
-    --accent: #7C5CFF;
-    --accent-2: #5BC0FF;
-    --teal: #2DD4BF;
-    --green: #34D399;
-    --orange: #FB923C;
-    --pink: #FB7185;
-}
-
-*{
-    background-color: var(--bg);
-}
-</style>

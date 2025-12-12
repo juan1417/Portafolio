@@ -1,0 +1,29 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "projects": "Proyectos",
+    "skills": "Habilidades y Tecnologías",
+    "about": "Acerca de/Contacto"
+  },
+  "home": {
+    "title": "Desarrolladar de sotfware",
+    "paragraph": "Estudiante de ingenieria en software, con experiencia en en el desarrollo de aplicaciones webs, escritorios y con amplios conocimientos en el desarrollo de aplicaciones mobiles como tambien un hundo entendimiento de mantenimiento, desarrollo y deseño de base de datos relaciones y no relaciones.",
+    "project": "Ver proyectos",
+    "cv": "Descargar hoja de vida"
+  },
+  "projects":{
+    "title": "Proyectos"
+  },
+  "skill":{
+    "tiltle": " Habilidades",
+    "skills":{
+        
+    }
+  },
+  "about":{
+
+  },
+  "language": {
+    "select": "Idioma"
+  }
+}

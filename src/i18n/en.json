@@ -1,0 +1,11 @@
+{
+  "nav": {
+    "home": "Home",
+    "projects": "Projects",
+    "skills": "Skills & Technologies",
+    "about": "About/Contact"
+  },
+  "language": {
+    "select": "Language"
+  }
+}

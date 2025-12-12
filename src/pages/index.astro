@@ -1,6 +1,16 @@
 ---
 import Base from "../layout/base.astro"
+import type { Language } from '../i18n/utils';
+
+const lang = (Astro.url.searchParams.get('lang') || 'en') as Language;
+console.log('URL params:', Astro.url.searchParams.toString());
+console.log('Detected lang:', lang);
 ---
 
-<Base>
+<Base lang={lang}>
+    <header>
+    </header>
+    <main>
+        <h1>Lang: {lang}</h1>
+    </main>
 </Base>
