@@ -5,6 +5,41 @@
     "skills": "Skills & Technologies",
     "about": "About/Contact"
   },
+  "home": {
+    "title": "Software Developer",
+    "paragraph": "Software engineering student with experience in web and desktop application development, and extensive knowledge in mobile application development as well as a deep understanding of maintenance, development, and design of relational and non-relational databases.",
+    "project": "View projects",
+    "cv": "Download resume"
+  },
+  "projects": {
+    "title": "Projects"
+  },
+  "skill": {
+    "title": "Skills",
+    "categories": {
+      "backend": {
+        "title": "Back End",
+        "technologies": ["Python", "Node.js", "Java", "Go"]
+      },
+      "frontend": {
+        "title": "Front End",
+        "technologies": ["React", "Angular", "Vue", "JavaScript", "HTML", "Tailwind CSS", "PHP", "Laravel"]
+      },
+      "database": {
+        "title": "Databases",
+        "technologies": ["SQL Server", "PostgreSQL", "MySQL", "MongoDB"]
+      },
+      "tools": {
+        "title": "Tools",
+        "technologies": ["Git", "GitHub", "Figma"]
+      },
+      "devops": {
+        "title": "DevOps & Deployments",
+        "technologies": ["Vercel", "Supabase", "Cloudflare", "Azure", "AWS"]
+      }
+    }
+  },
+  "about": {},
   "language": {
     "select": "Language"
   }

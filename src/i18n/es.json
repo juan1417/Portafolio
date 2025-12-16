@@ -11,16 +11,35 @@
     "project": "Ver proyectos",
     "cv": "Descargar hoja de vida"
   },
-  "projects":{
+  "projects": {
     "title": "Proyectos"
   },
-  "skill":{
-    "tiltle": " Habilidades",
-    "skills":{
-        
+  "skill": {
+    "title": "Habilidades",
+    "categories": {
+      "backend": {
+        "title": "Back End",
+        "technologies": ["Python", "Node.js", "Java", "Go"]
+      },
+      "frontend": {
+        "title": "Front End",
+        "technologies": ["React", "Angular", "Vue", "JavaScript", "HTML", "Tailwind CSS", "PHP", "Laravel"]
+      },
+      "database": {
+        "title": "Bases de Datos",
+        "technologies": ["SQL Server", "PostgreSQL", "MySQL", "MongoDB"]
+      },
+      "tools": {
+        "title": "Herramientas",
+        "technologies": ["Git", "GitHub", "Figma"]
+      },
+      "devops": {
+        "title": "DevOps & Despliegues",
+        "technologies": ["Vercel", "Supabase", "Cloudflare", "Azure", "AWS"]
+      }
     }
   },
-  "about":{
+  "about": {
 
   },
   "language": {
