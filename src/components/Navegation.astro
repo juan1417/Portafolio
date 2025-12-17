@@ -1,25 +1,24 @@
 ---
-import Iconlanguage from '../../public/language-solid-full.svg?raw'
 import { getTranslations, type Language } from '../i18n/utils'
 
 interface Props {
   lang?: Language;
 }
 
-const { lang = 'en' } = Astro.props;
-const t = getTranslations(lang);
+const lang = (Astro.url.searchParams.get('lang') || 'en') as Language;
+const t = getTranslations(lang)
 ---
 
 <nav class="flex items-center justify-between p-4 bg-surface">
   <div class="flex items-center gap-3">
     <img src="" alt="" class="w-20 h-auto" />
-    <h2 class="text-text text-xl font-bold">CodingSpace [{lang}]</h2>
+    <h2 class="text-text text-xl font-bold">CodingSpace </h2>
   </div>
   <div class="flex items-center gap-6">
     <ul class="flex gap-6 list-none">
       <li>
         <a
-          href="#home"
+          href="/"
           class="text-text-muted hover:text-primary cursor-pointer transition-colors"
           >{t.nav.home}</a>
       </li>
@@ -31,7 +30,7 @@ const t = getTranslations(lang);
       </li>
       <li>
         <a
-          href="#skills"
+          href="/skills"
           class="text-text-muted hover:text-primary cursor-pointer transition-colors"
           >{t.nav.skills}</a>
       </li>
@@ -43,12 +42,12 @@ const t = getTranslations(lang);
       </li>
     </ul>
     <form class="flex items-center gap-2">
-      <div class="w-6 h-6 [&_svg]:fill-text-muted" set:html={Iconlanguage} />
+      <span class="material-symbols-outlined text-text-muted text-xl">language</span>
       <label for="language-select" class="sr-only">{t.language.select}</label>
       <select
         id="language-select"
         name="language"
-        class="bg-surface-elevated text-text px-3 py-1 rounded border border-primary/20 focus:outline-none focus:border-primary"
+        class="bg-surface-elevated text-text px-3 py-1 rounded border border-primary/20 focus:outline-none focus:border-primary cursor-pointer font-['Inter']"
         aria-label={t.language.select}
       >
         <option value="en" selected={lang === 'en'}>English</option>

@@ -1,0 +1,31 @@
+---
+import { getTranslations, type Language } from "../i18n/utils";
+
+const lang = (Astro.url.searchParams.get('lang') || 'en') as Language;
+const t = getTranslations(lang)
+---
+
+
+<footer class="bg-surface py-8 fixed bottom-0 left-0 right-0">
+    <div class="max-w-6xl mx-auto px-4">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+            <div>
+                <ul class="flex gap-6 text-text-muted">
+                    <li><a href="/" class="hover:text-primary transition-colors">{t.nav.home}</a></li>
+                    <li><a href="/projects" class="hover:text-primary transition-colors">{t.nav.projects}</a></li>
+                    <li><a href="/skills" class="hover:text-primary transition-colors">{t.nav.skills}</a></li>
+                    <li><a href="/about" class="hover:text-primary transition-colors">{t.nav.about}</a></li>
+                </ul>
+            </div>
+            <div>
+                <ul class="flex gap-4">
+                    <li><a href="#" class="text-text-muted hover:text-primary transition-colors text-xl"><i class="fa-brands fa-github"></i></a></li>
+                    <li><a href="#" class="text-text-muted hover:text-primary transition-colors text-xl"><i class="fa-brands fa-linkedin"></i></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-surface-elevated mt-6 pt-6">
+            <p class="text-text-muted text-center text-sm">© {new Date().getFullYear()} Todos los derechos reservados.</p>
+        </div>
+    </div>
+</footer>

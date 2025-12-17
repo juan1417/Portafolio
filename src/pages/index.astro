@@ -1,16 +1,34 @@
 ---
 import Base from "../layout/base.astro"
-import type { Language } from '../i18n/utils';
-
+import Footer from "../components/footer.astro";
+import { getTranslations, type Language } from '../i18n/utils'
 const lang = (Astro.url.searchParams.get('lang') || 'en') as Language;
-console.log('URL params:', Astro.url.searchParams.toString());
-console.log('Detected lang:', lang);
+const t = getTranslations(lang)
 ---
 
-<Base lang={lang}>
-    <header>
-    </header>
-    <main>
-        <h1>Lang: {lang}</h1>
+<Base>
+    <main class="flex flex-col flex-grow items-center justify-center px-4 py-8 gap-8 relative">
+        <!-- Glow effect behind text -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-primary/20 rounded-full blur-[120px] pointer-events-none"></div>
+        
+        <div class="flex flex-col items-center text-center gap-6 relative z-10">
+            <h1 class="text-text text-[4rem] md:text-[5rem] lg:text-[6rem] font-extrabold leading-tight">{ t.home.title }</h1>
+            <p class="text-text-muted text-[1.1rem] md:text-[1.25rem] font-normal max-w-2xl leading-relaxed">{ t.home.paragraph }</p>
+        </div>
+        
+        <div class="flex gap-4 justify-center relative z-10">
+            <input 
+                type="button" 
+                value={t.home.project} 
+                class="bg-primary text-text px-8 py-3 rounded-full font-semibold cursor-pointer hover:opacity-90 transition-all hover:scale-105"
+            >
+            <button 
+                class="bg-transparent text-text px-8 py-3 rounded-full font-semibold cursor-pointer border border-text-muted/30 hover:border-text-muted hover:bg-surface-elevated transition-all flex items-center gap-2"
+            >
+                <span class="material-symbols-outlined text-lg">download</span>
+                {t.home.cv}
+            </button>
+        </div>
     </main>
+    <Footer/>
 </Base>

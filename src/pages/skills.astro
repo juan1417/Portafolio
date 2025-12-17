@@ -1,0 +1,44 @@
+---
+import Base from "../layout/base.astro"
+import Footer from "../components/footer.astro";
+import { getTranslations, type Language } from '../i18n/utils';
+
+const lang = (Astro.url.searchParams.get('lang') || 'en') as Language;
+const t = getTranslations(lang)
+
+const categoryIcons: Record<string, string> = {
+    backend: "terminal",
+    frontend: "web",
+    database: "storage",
+    tools: "build",
+    devops: "cloud_upload"
+};
+---
+
+<Base lang={lang}>
+    <main class="flex flex-col flex-grow px-4 py-16 max-w-6xl mx-auto w-full">
+        <div class="text-center mb-12">
+            <h1 class="text-text text-[3rem] md:text-[4rem] font-extrabold mb-4">{t.skill.title}</h1>
+            <p class="text-text-muted text-lg max-w-2xl mx-auto">Technologies and tools I work with</p>
+        </div>
+        
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Object.entries(t.skill.categories).map(([key, value]) => (
+                <article class="bg-surface rounded-xl p-6 border border-surface-elevated hover:border-primary/30 transition-all hover:shadow-lg hover:shadow-primary/10">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="material-symbols-outlined text-primary text-3xl">{categoryIcons[key] || "code"}</span>
+                        <h2 class="text-text text-xl font-bold">{value.title}</h2>
+                    </div>
+                    <ul class="flex flex-wrap gap-2">
+                        {value.technologies.map((tech) => (
+                            <li class="bg-surface-elevated text-text-muted px-3 py-1.5 rounded-full text-sm hover:text-primary hover:bg-primary/10 transition-colors cursor-default">
+                                {tech}
+                            </li>
+                        ))}
+                    </ul>
+                </article>
+            ))}
+        </section>
+    </main>
+    <Footer />
+</Base>

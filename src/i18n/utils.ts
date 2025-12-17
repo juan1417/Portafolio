@@ -1,26 +1,9 @@
+import en from './en.json';
+import es from './es.json';
+
 export const languages = {
-  en: {
-    nav: {
-      home: "Home",
-      projects: "Projects",
-      skills: "Skills & Technologies",
-      about: "About/Contact"
-    },
-    language: {
-      select: "Language"
-    }
-  },
-  es: {
-    nav: {
-      home: "Inicio",
-      projects: "Proyectos",
-      skills: "Habilidades y Tecnologías",
-      about: "Acerca de/Contacto"
-    },
-    language: {
-      select: "Idioma"
-    }
-  }
+  en,
+  es
 };
 
 export type Language = keyof typeof languages;
