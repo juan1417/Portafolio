@@ -18,25 +18,25 @@ const t = getTranslations(lang)
     <ul class="flex gap-6 list-none">
       <li>
         <a
-          href="/"
+          href={`/?lang=${lang}`}
           class="text-text-muted hover:text-primary cursor-pointer transition-colors"
           >{t.nav.home}</a>
       </li>
       <li>
         <a
-          href="#projects"
+          href={`/projects?lang=${lang}`}
           class="text-text-muted hover:text-primary cursor-pointer transition-colors"
           >{t.nav.projects}</a>
       </li>
       <li>
         <a
-          href="/skills"
+          href={`/skills?lang=${lang}`}
           class="text-text-muted hover:text-primary cursor-pointer transition-colors"
           >{t.nav.skills}</a>
       </li>
       <li>
         <a
-          href="#about"
+          href={`/about?lang=${lang}`}
           class="text-text-muted hover:text-primary cursor-pointer transition-colors"
           >{t.nav.about}</a>
       </li>

@@ -13,13 +13,46 @@ const categoryIcons: Record<string, string> = {
     tools: "build",
     devops: "cloud_upload"
 };
+
+// Mapeo de tecnologías a iconos de Font Awesome
+const techIcons: Record<string, string> = {
+    // Backend
+    "Python": "fa-brands fa-python",
+    "Node.js": "fa-brands fa-node-js",
+    "Java": "fa-brands fa-java",
+    "Go": "fa-brands fa-golang",
+    // Frontend
+    "React": "fa-brands fa-react",
+    "Angular": "fa-brands fa-angular",
+    "Vue": "fa-brands fa-vuejs",
+    "JavaScript": "fa-brands fa-js",
+    "HTML": "fa-brands fa-html5",
+    "Tailwind CSS": "fa-brands fa-css3",
+    "PHP": "fa-brands fa-php",
+    "Laravel": "fa-brands fa-laravel",
+    // Database
+    "SQL Server": "fa-solid fa-database",
+    "PostgreSQL": "fa-solid fa-database",
+    "MySQL": "fa-solid fa-database",
+    "MongoDB": "fa-solid fa-leaf",
+    // Tools
+    "Git": "fa-brands fa-git-alt",
+    "GitHub": "fa-brands fa-github",
+    "Figma": "fa-brands fa-figma",
+    // DevOps
+    "Vercel": "fa-solid fa-v",
+    "Supabase": "fa-solid fa-bolt",
+    "Cloudflare": "fa-brands fa-cloudflare",
+    "Azure": "fa-brands fa-microsoft",
+    "AWS": "fa-brands fa-aws"
+};
 ---
 
-<Base lang={lang}>
+<Base >
     <main class="flex flex-col flex-grow px-4 py-16 max-w-6xl mx-auto w-full">
         <div class="text-center mb-12">
             <h1 class="text-text text-[3rem] md:text-[4rem] font-extrabold mb-4">{t.skill.title}</h1>
-            <p class="text-text-muted text-lg max-w-2xl mx-auto">Technologies and tools I work with</p>
+            <p class="text-text-muted text-lg max-w-2xl mx-auto">{t.skill.description}</p>
         </div>
         
         <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -31,7 +64,8 @@ const categoryIcons: Record<string, string> = {
                     </div>
                     <ul class="flex flex-wrap gap-2">
                         {value.technologies.map((tech) => (
-                            <li class="bg-surface-elevated text-text-muted px-3 py-1.5 rounded-full text-sm hover:text-primary hover:bg-primary/10 transition-colors cursor-default">
+                            <li class="bg-surface-elevated text-text-muted px-3 py-2 rounded-lg text-sm hover:text-primary hover:bg-primary/10 transition-colors cursor-default flex items-center gap-2">
+                                <i class={`${techIcons[tech] || "fa-solid fa-code"} text-base`}></i>
                                 {tech}
                             </li>
                         ))}

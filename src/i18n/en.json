@@ -16,6 +16,7 @@
   },
   "skill": {
     "title": "Skills",
+    "description": "Technologies and tools I work with",
     "categories": {
       "backend": {
         "title": "Back End",

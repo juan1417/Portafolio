@@ -1,0 +1,14 @@
+---
+import Base from "../layout/base.astro";
+import { getTranslations, type Language } from "../i18n/utils";
+
+const lang = (Astro.url.searchParams.get("lang") || "en") as Language;
+const t = getTranslations(lang);
+---
+
+<Base>
+  <main>
+    <h1>{t.projects.title}</h1>
+    <p></p>
+  </main>
+</Base>

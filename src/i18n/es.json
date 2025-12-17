@@ -12,10 +12,18 @@
     "cv": "Descargar hoja de vida"
   },
   "projects": {
-    "title": "Proyectos"
+    "title": "Proyectos",
+    "description":"Proyectos que e trabajado",
+    "categories":{
+      "back":[],
+      "frontend":[],
+      "mobile":[],
+      "desktop":[]
+    }
   },
   "skill": {
     "title": "Habilidades",
+     "description": "Tecnologias y Herramientas que trabajo",
     "categories": {
       "backend": {
         "title": "Back End",

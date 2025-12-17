@@ -11,10 +11,10 @@ const t = getTranslations(lang)
         <div class="flex flex-col md:flex-row justify-between items-center gap-6">
             <div>
                 <ul class="flex gap-6 text-text-muted">
-                    <li><a href="/" class="hover:text-primary transition-colors">{t.nav.home}</a></li>
-                    <li><a href="/projects" class="hover:text-primary transition-colors">{t.nav.projects}</a></li>
-                    <li><a href="/skills" class="hover:text-primary transition-colors">{t.nav.skills}</a></li>
-                    <li><a href="/about" class="hover:text-primary transition-colors">{t.nav.about}</a></li>
+                    <li><a href={`/?lang=${lang}`} class="hover:text-primary transition-colors">{t.nav.home}</a></li>
+                    <li><a href={`/projects?lang=${lang}`} class="hover:text-primary transition-colors">{t.nav.projects}</a></li>
+                    <li><a href={`/skills?lang=${lang}`} class="hover:text-primary transition-colors">{t.nav.skills}</a></li>
+                    <li><a href={`/about?lang=${lang}`} class="hover:text-primary transition-colors">{t.nav.about}</a></li>
                 </ul>
             </div>
             <div>
