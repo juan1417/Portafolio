@@ -4,6 +4,7 @@ import Footer from "../components/footer.astro";
 import { getTranslations, type Language } from '../i18n/utils'
 const lang = (Astro.url.searchParams.get('lang') || 'en') as Language;
 const t = getTranslations(lang)
+const cvPath = lang === "es" ? "/docs/CV_Juan_Manuel_Machado.pdf" : "/docs/CV_Juan_Manuel_Machado_EN.pdf";
 ---
 
 <Base>
@@ -22,12 +23,14 @@ const t = getTranslations(lang)
                 value={t.home.project} 
                 class="bg-primary text-text px-8 py-3 rounded-full font-semibold cursor-pointer hover:opacity-90 transition-all hover:scale-105"
             >
-            <button 
+            <a 
+                href={cvPath}
+                download
                 class="bg-transparent text-text px-8 py-3 rounded-full font-semibold cursor-pointer border border-text-muted/30 hover:border-text-muted hover:bg-surface-elevated transition-all flex items-center gap-2"
             >
                 <span class="material-symbols-outlined text-lg">download</span>
                 {t.home.cv}
-            </button>
+            </a>
         </div>
     </main>
     <Footer/>

@@ -12,7 +12,48 @@
     "cv": "Download resume"
   },
   "projects": {
-    "title": "Projects"
+    "title": "Projects",
+    "description": "Projects I have worked on",
+    "viewProject": "View project",
+    "viewCode": "View code",
+    "categories": {
+      "all": "All",
+      "web": "Web",
+      "mobile": "Mobile",
+      "desktop": "Desktop"
+    },
+    "items": {
+      "pascualBet": {
+        "name": "Pascual Bet",
+        "description": "Betting website developed for a university project",
+        "technologies": ["Vue", "NestJS", "JavaScript", "Node.js", "Vercel", "PostgreSQL"],
+        "category": "web"
+      },
+      "storageManager": {
+        "name": "Storage Manager",
+        "description": "App that helps store and manage files and folders on a custom server or SaaS-type service",
+        "technologies": ["Kotlin"],
+        "category": "mobile"
+      },
+      "menuMaster": {
+        "name": "Menu Master",
+        "description": "Application created to help manage orders and inventory for a restaurant",
+        "technologies": ["C#", ".NET", "SQL Server"],
+        "category": "desktop"
+      },
+      "muelitasFelices": {
+        "name": "Muelitas Felices",
+        "description": "Application developed to manage dental appointments based on each need or if a specialist is required in a certain area",
+        "technologies": ["C#", ".NET", "SQL Server"],
+        "category": "desktop"
+      },
+      "ecommerce": {
+        "name": "Fast Shopping",
+        "description": "E-commerce platform with product catalog, shopping cart, payment system integrated with Wompi and electronic invoicing through Factus",
+        "technologies": ["PHP", "Laravel", "MySQL", "Wompi", "Factus"],
+        "category": "web"
+      }
+    }
   },
   "skill": {
     "title": "Skills",
@@ -37,10 +78,48 @@
       "devops": {
         "title": "DevOps & Deployments",
         "technologies": ["Vercel", "Supabase", "Cloudflare", "Azure", "AWS"]
+      },
+      "others": {
+        "title": "Others",
+        "technologies": ["C#", "Kotlin"]
       }
     }
   },
-  "about": {},
+  "about": {
+    "header": {
+      "name": "Juan Manuel Machado",
+      "job": "Software Developer",
+      "paragraph": "I am a passionate developer with the ability to learn new things and work as a team.",
+      "cv": "Download resume"
+    },
+    "journey": {
+      "title": "About Me",
+      "about": "Advanced Software Engineering student with one year of professional experience as a Full-Stack Developer, with knowledge in backend development (Python, JavaScript) and frontend (React, Angular, PHP). I have a strong self-taught foundation, complemented by specialized training in Python. I am seeking an opportunity that allows me to apply my technical skills, agile mindset, and capacity for continuous learning.",
+      "subtitle": "Work Experience",
+      "experience": {
+        "SysBlue": {
+          "name": "SysBlue",
+          "date": "2023-2024",
+          "description": "I worked on web projects using technologies such as PHP, React, and TypeScript to create websites"
+        }
+      }
+    },
+    "mgs": {
+      "title": "Get in Touch",
+      "description": "Available to discuss new projects and work as a freelancer",
+      "contact": {
+        "email": "jmachadoact@gmail.com",
+        "location": "Medellín, Antioquia",
+        "social": ["GitHub", "LinkedIn"]
+      },
+      "input": {
+        "name": "Name",
+        "email": "Email",
+        "msg": "Message",
+        "summit": "Send Message"
+      }
+    }
+  },
   "language": {
     "select": "Language"
   }

@@ -6,24 +6,58 @@
     "about": "Acerca de/Contacto"
   },
   "home": {
-    "title": "Desarrolladar de sotfware",
-    "paragraph": "Estudiante de ingenieria en software, con experiencia en en el desarrollo de aplicaciones webs, escritorios y con amplios conocimientos en el desarrollo de aplicaciones mobiles como tambien un hundo entendimiento de mantenimiento, desarrollo y deseño de base de datos relaciones y no relaciones.",
+    "title": "Desarrollador de Software",
+    "paragraph": "Estudiante de ingeniería en software, con experiencia en el desarrollo de aplicaciones web, escritorio y con amplios conocimientos en el desarrollo de aplicaciones móviles, como también un profundo entendimiento de mantenimiento, desarrollo y diseño de bases de datos relacionales y no relacionales.",
     "project": "Ver proyectos",
     "cv": "Descargar hoja de vida"
   },
   "projects": {
     "title": "Proyectos",
-    "description":"Proyectos que e trabajado",
-    "categories":{
-      "back":[],
-      "frontend":[],
-      "mobile":[],
-      "desktop":[]
+    "description": "Proyectos en los que he trabajado",
+    "viewProject": "Ver proyecto",
+    "viewCode": "Ver código",
+    "categories": {
+      "all": "Todos",
+      "web": "Web",
+      "mobile": "Móvil",
+      "desktop": "Escritorio"
+    },
+    "items": {
+      "pascualBet": {
+        "name": "Pascual Bet",
+        "description": "Página de apuestas desarrollada para un proyecto universitario",
+        "technologies": ["Vue", "NestJS", "JavaScript", "Node.js", "Vercel", "PostgreSQL"],
+        "category": "web"
+      },
+      "storageManager": {
+        "name": "Storage Manager",
+        "description": "Aplicación que ayuda a guardar y almacenar archivos y carpetas en un servidor personalizado o tipo SaaS",
+        "technologies": ["Kotlin"],
+        "category": "mobile"
+      },
+      "menuMaster": {
+        "name": "Menu Master",
+        "description": "Aplicación creada para ayudar a gestionar los pedidos y el inventario de un restaurante",
+        "technologies": ["C#", ".NET", "SQL Server"],
+        "category": "desktop"
+      },
+      "muelitasFelices": {
+        "name": "Muelitas Felices",
+        "description": "Aplicación desarrollada para gestionar citas odontológicas según cada necesidad o si requiere un especialista en cierta área",
+        "technologies": ["C#", ".NET", "SQL Server"],
+        "category": "desktop"
+      },
+      "ecommerce":{
+        "name": "Fast Shopping",
+        "description": "Plataforma de comercio electrónico con catálogo de productos, carrito de compras, sistema de pagos integrado con Wompi y facturación electrónica mediante Factus",
+        "technologies": ["PHP", "Laravel", "MySQL", "Wompi", "Factus"],
+        "category": "web"
+      }
     }
   },
   "skill": {
     "title": "Habilidades",
-     "description": "Tecnologias y Herramientas que trabajo",
+    "description": "Tecnologías y herramientas con las que trabajo",
     "categories": {
       "backend": {
         "title": "Back End",
@@ -31,7 +65,16 @@
       },
       "frontend": {
         "title": "Front End",
-        "technologies": ["React", "Angular", "Vue", "JavaScript", "HTML", "Tailwind CSS", "PHP", "Laravel"]
+        "technologies": [
+          "React",
+          "Angular",
+          "Vue",
+          "JavaScript",
+          "HTML",
+          "Tailwind CSS",
+          "PHP",
+          "Laravel"
+        ]
       },
       "database": {
         "title": "Bases de Datos",
@@ -44,11 +87,47 @@
       "devops": {
         "title": "DevOps & Despliegues",
         "technologies": ["Vercel", "Supabase", "Cloudflare", "Azure", "AWS"]
+      },
+      "others": {
+        "title": "Otros",
+        "technologies": ["C#", "Kotlin"]
       }
     }
   },
   "about": {
-
+    "header": {
+      "name": "Juan Manuel Machado",
+      "job": "Desarrollador de Software",
+      "paragraph": "Soy un desarrollador apasionado por el desarrollo con la capacidad de aprender cosas nuevas y trabajar en equipo.",
+      "cv": "Descargar hoja de vida"
+    },
+    "journey": {
+      "title":"Sobre mí",
+      "about": "Estudiante avanzado de Ingeniería de Software con un año de experiencia profesional como Desarrollador Full-Stack, con conocimientos en desarrollo backend (Python, JavaScript) y frontend (React, Angular, PHP). Cuento con una sólida base autodidacta, complementada con formación especializada en Python. Busco una oportunidad que me permita aplicar mis habilidades técnicas, mi mentalidad ágil y mi capacidad de aprendizaje continuo.",
+      "subtitle": "Experiencia laboral",
+      "experience": {
+        "SysBlue": {
+          "name": "SysBlue",
+          "date": "2023-2024",
+          "description": "Trabajé en proyectos web utilizando tecnologías como PHP, React y TypeScript para crear sitios web"
+        }
+      }
+    },
+    "mgs":{
+      "title": "Ponte en contacto",
+      "description": "Dispuesto a discutir nuevos proyectos y trabajar como freelancer",
+      "contact": {
+        "email": "jmachadoact@gmail.com",
+        "location": "Medellín, Antioquia",
+        "social": ["GitHub", "LinkedIn"]
+      },
+      "input": {
+        "name": "Nombre",
+        "email": "Correo",
+        "msg": "Mensaje",
+        "summit": "Mandar mensaje"
+      }
+    }
   },
   "language": {
     "select": "Idioma"

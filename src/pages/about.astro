@@ -1,14 +1,179 @@
 ---
 import Base from "../layout/base.astro";
 import { getTranslations, type Language } from "../i18n/utils";
-
+import Footer from "../components/footer.astro";
 const lang = (Astro.url.searchParams.get("lang") || "en") as Language;
 const t = getTranslations(lang);
+const cvPath = lang === "es" ? "/docs/CV_Juan_Manuel_Machado.pdf" : "/docs/CV_Juan_Manuel_Machado_EN.pdf";
 ---
 
 <Base>
-  <main>
-    <h1>{t.projects.title}</h1>
-    <p></p>
+  <main class="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto space-y-16">
+      
+      <!-- Header Section - Profile Card -->
+      <section class="bg-surface rounded-2xl p-8 md:p-12 border border-surface-elevated">
+        <div class="flex flex-col md:flex-row items-center gap-8">
+          <!-- Profile Image -->
+          <div class="relative">
+            <div class="w-40 h-40 md:w-52 md:h-52 rounded-full bg-gradient-to-br from-primary to-secondary p-1">
+              <div class="w-full h-full rounded-full bg-surface flex items-center justify-center">
+                <i class="fa-solid fa-user text-6xl md:text-7xl text-primary"></i>
+              </div>
+            </div>
+            <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-success rounded-full border-4 border-surface"></div>
+          </div>
+          
+          <!-- Profile Info -->
+          <div class="text-center md:text-left flex-1">
+            <h1 class="text-3xl md:text-4xl font-bold text-text mb-2">{t.about.header.name}</h1>
+            <p class="text-xl text-primary font-medium mb-4">{t.about.header.job}</p>
+            <p class="text-text-muted max-w-xl mb-6">{t.about.header.paragraph}</p>
+            <a 
+              href={cvPath}
+              download
+              class="inline-flex items-center gap-2 bg-primary hover:bg-primary/80 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:scale-105"
+            >
+              <i class="fa-solid fa-download"></i>
+              {t.about.header.cv}
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Journey Section - About Me & Experience -->
+      <section class="grid md:grid-cols-2 gap-8">
+        <!-- About Me -->
+        <div class="bg-surface rounded-2xl p-8 border border-surface-elevated">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center">
+              <i class="fa-solid fa-user-pen text-primary"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-text">{t.about.journey.title}</h2>
+          </div>
+          <p class="text-text-muted leading-relaxed">{t.about.journey.about}</p>
+        </div>
+
+        <!-- Work Experience -->
+        <div class="bg-surface rounded-2xl p-8 border border-surface-elevated">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 bg-secondary/20 rounded-lg flex items-center justify-center">
+              <i class="fa-solid fa-briefcase text-secondary"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-text">{t.about.journey.subtitle}</h2>
+          </div>
+          
+          <!-- Experience Item -->
+          <div class="relative pl-6 border-l-2 border-primary/30">
+            <div class="absolute -left-[9px] top-0 w-4 h-4 bg-primary rounded-full"></div>
+            <div class="bg-surface-elevated rounded-lg p-4">
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                <h3 class="text-lg font-semibold text-text">{t.about.journey.experience.SysBlue.name}</h3>
+                <span class="text-sm text-primary bg-primary/10 px-3 py-1 rounded-full">
+                  {t.about.journey.experience.SysBlue.date}
+                </span>
+              </div>
+              <p class="text-text-muted text-sm">{t.about.journey.experience.SysBlue.description}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Section -->
+      <section class="bg-surface rounded-2xl p-8 md:p-12 border border-surface-elevated">
+        <div class="text-center mb-10">
+          <h2 class="text-3xl font-bold text-text mb-3">{t.about.mgs.title}</h2>
+          <p class="text-text-muted max-w-xl mx-auto">{t.about.mgs.description}</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-10">
+          <!-- Contact Info -->
+          <div class="space-y-6">
+            <h3 class="text-xl font-semibold text-text mb-4">Info</h3>
+            
+            <!-- Email -->
+            <a href={`mailto:${t.about.mgs.contact.email}`} class="flex items-center gap-4 group">
+              <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center group-hover:bg-primary/30 transition-colors">
+                <i class="fa-solid fa-envelope text-primary text-xl"></i>
+              </div>
+              <div>
+                <p class="text-text-muted text-sm">Email</p>
+                <p class="text-text group-hover:text-primary transition-colors">{t.about.mgs.contact.email}</p>
+              </div>
+            </a>
+
+            <!-- Location -->
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-secondary/20 rounded-lg flex items-center justify-center">
+                <i class="fa-solid fa-location-dot text-secondary text-xl"></i>
+              </div>
+              <div>
+                <p class="text-text-muted text-sm">Location</p>
+                <p class="text-text">{t.about.mgs.contact.location}</p>
+              </div>
+            </div>
+
+            <!-- Social Links -->
+            <div class="pt-4">
+              <p class="text-text-muted text-sm mb-3">Social</p>
+              <div class="flex gap-3">
+                <a href="https://github.com/tuusuario" target="_blank" class="w-12 h-12 bg-surface-elevated hover:bg-primary/20 rounded-lg flex items-center justify-center transition-colors group">
+                  <i class="fa-brands fa-github text-text-muted group-hover:text-primary text-2xl transition-colors"></i>
+                </a>
+                <a href="https://linkedin.com/in/tuusuario" target="_blank" class="w-12 h-12 bg-surface-elevated hover:bg-secondary/20 rounded-lg flex items-center justify-center transition-colors group">
+                  <i class="fa-brands fa-linkedin text-text-muted group-hover:text-secondary text-2xl transition-colors"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Form -->
+          <form action="" method="post" class="space-y-5">
+            <div>
+              <label for="name" class="block text-text-muted text-sm mb-2">{t.about.mgs.input.name}</label>
+              <input 
+                type="text" 
+                id="name" 
+                name="name"
+                class="w-full bg-surface-elevated border border-surface-elevated focus:border-primary rounded-lg px-4 py-3 text-text placeholder-text-muted/50 outline-none transition-colors"
+                placeholder={t.about.mgs.input.name}
+              />
+            </div>
+            
+            <div>
+              <label for="email" class="block text-text-muted text-sm mb-2">{t.about.mgs.input.email}</label>
+              <input 
+                type="email" 
+                id="email" 
+                name="email"
+                class="w-full bg-surface-elevated border border-surface-elevated focus:border-primary rounded-lg px-4 py-3 text-text placeholder-text-muted/50 outline-none transition-colors"
+                placeholder={t.about.mgs.input.email}
+              />
+            </div>
+            
+            <div>
+              <label for="message" class="block text-text-muted text-sm mb-2">{t.about.mgs.input.msg}</label>
+              <textarea 
+                id="message" 
+                name="message"
+                rows="4"
+                class="w-full bg-surface-elevated border border-surface-elevated focus:border-primary rounded-lg px-4 py-3 text-text placeholder-text-muted/50 outline-none transition-colors resize-none"
+                placeholder={t.about.mgs.input.msg}
+              ></textarea>
+            </div>
+            
+            <button 
+              type="submit"
+              class="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 hover:scale-[1.02] flex items-center justify-center gap-2"
+            onclick="">
+              <i class="fa-solid fa-paper-plane"></i>
+              {t.about.mgs.input.summit}
+            </button>
+          </form>
+        </div>
+      </section>
+
+    </div>
   </main>
+<Footer/>
 </Base>

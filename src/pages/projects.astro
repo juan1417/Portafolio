@@ -1,7 +1,121 @@
 ---
-import Base from "../layout/base.astro"
+import Base from "../layout/base.astro";
+import Footer from "../components/Footer.astro";
+import { getTranslations, type Language } from "../i18n/utils";
+const lang = (Astro.url.searchParams.get("lang") || "en") as Language;
+const t = getTranslations(lang);
+
+const projects = t.projects.items;
+
+const techIcons: Record<string, string> = {
+  "Vue": "devicon-vuejs-plain",
+  "NestJS": "devicon-nestjs-original",
+  "JavaScript": "devicon-javascript-plain",
+  "Node.js": "devicon-nodejs-plain",
+  "Vercel": "devicon-vercel-original",
+  "postgres": "devicon-postgresql-plain",
+  "Kotlin": "devicon-kotlin-plain",
+  "C#": "devicon-csharp-plain",
+  ".NET": "devicon-dotnetcore-plain",
+  "SQL Server": "devicon-microsoftsqlserver-plain",
+  "PHP": "devicon-php-plain",
+  "Laravel": "devicon-laravel-original",
+  "MySQL": "devicon-mysql-plain",
+  "Wompi": "fa-solid fa-credit-card",
+  "Factus": "fa-solid fa-file-invoice",
+};
 ---
 
 <Base>
-    <main></main>
+  <main class="flex-1 max-w-6xl mx-auto px-4 py-12 w-full">
+    <div class="text-center mb-12">
+      <h1 class="text-4xl md:text-5xl font-bold text-text mb-4">{t.projects.title}</h1>
+      <p class="text-text-muted text-lg">{t.projects.description}</p>
+    </div>
+    <div class="flex justify-center mb-10">
+      <ul class="flex gap-2 bg-surface p-2 rounded-xl">
+        <li>
+          <button type="button" data-category="all" class="filter-btn px-4 py-2 rounded-lg text-text-muted hover:text-text hover:bg-surface-elevated transition-all">{t.projects.categories.all}</button>
+        </li>
+        <li>
+          <button type="button" data-category="web" class="filter-btn px-4 py-2 rounded-lg text-text-muted hover:text-text hover:bg-surface-elevated transition-all">{t.projects.categories.web}</button>
+        </li>
+        <li>
+          <button type="button" data-category="mobile" class="filter-btn px-4 py-2 rounded-lg text-text-muted hover:text-text hover:bg-surface-elevated transition-all">{t.projects.categories.mobile}</button>
+        </li>
+        <li>
+          <button type="button" data-category="desktop" class="filter-btn px-4 py-2 rounded-lg text-text-muted hover:text-text hover:bg-surface-elevated transition-all">{t.projects.categories.desktop}</button>
+        </li>
+      </ul>
+    </div>
+    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {Object.entries(projects).map(([key, value]) => (
+        <article 
+          class="project-card bg-surface rounded-2xl overflow-hidden border border-surface-elevated hover:border-primary/50 transition-all duration-300 hover:-translate-y-1"
+          data-category={value.category}
+        >
+          <div class="h-48 bg-surface-elevated flex items-center justify-center">
+            <i class="fa-solid fa-image text-4xl text-text-muted/30"></i>
+          </div>
+          <div class="p-6">
+            <h2 class="text-xl font-bold text-text mb-2">{value.name}</h2>
+            <p class="text-text-muted text-sm mb-4 line-clamp-3">{value.description}</p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              {value.technologies.map((tech: string) => (
+                <span class="flex items-center gap-1 text-xs bg-surface-elevated px-2 py-1 rounded-full text-text-muted">
+                  <i class={techIcons[tech] || "fa-solid fa-code"}></i>
+                  {tech}
+                </span>
+              ))}
+            </div>
+            <div class="flex gap-3">
+              <a href="#" class="flex-1 text-center px-4 py-2 bg-primary text-text rounded-lg hover:bg-primary/80 transition-colors text-sm font-medium">
+                <i class="fa-solid fa-external-link-alt mr-2"></i>{t.projects.viewProject}
+              </a>
+              <a href="#" class="px-4 py-2 border border-text-muted/30 text-text-muted rounded-lg hover:border-primary hover:text-primary transition-colors text-sm">
+                <i class="fa-brands fa-github"></i>
+              </a>
+            </div>
+          </div>
+        </article>
+      ))}
+    </section>
+  </main>
+  <Footer />
 </Base>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const projects = document.querySelectorAll('.project-card');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('bg-primary', 'text-text'));
+        btn.classList.add('bg-primary', 'text-text');
+        
+        const category = btn.getAttribute('data-category');
+        
+        projects.forEach(project => {
+          const projectCategory = project.getAttribute('data-category');
+          if (category === 'all' || projectCategory === category) {
+            project.classList.remove('hidden');
+          } else {
+            project.classList.add('hidden');
+          }
+        });
+      });
+    });
+
+    filterBtns[0]?.classList.add('bg-primary', 'text-text');
+  });
+</script>
+
+<style>
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
