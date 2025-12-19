@@ -5,6 +5,7 @@ import Footer from "../components/footer.astro";
 const lang = (Astro.url.searchParams.get("lang") || "en") as Language;
 const t = getTranslations(lang);
 const cvPath = lang === "es" ? "/docs/CV_Juan_Manuel_Machado.pdf" : "/docs/CV_Juan_Manuel_Machado_EN.pdf";
+const cvFileName = lang === "es" ? "CV_Juan_Manuel_Machado.pdf" : "CV_Juan_Manuel_Machado_EN.pdf";
 ---
 
 <Base>
@@ -31,7 +32,7 @@ const cvPath = lang === "es" ? "/docs/CV_Juan_Manuel_Machado.pdf" : "/docs/CV_Ju
             <p class="text-text-muted max-w-xl mb-6">{t.about.header.paragraph}</p>
             <a 
               href={cvPath}
-              download
+              download={cvFileName}
               class="inline-flex items-center gap-2 bg-primary hover:bg-primary/80 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:scale-105"
             >
               <i class="fa-solid fa-download"></i>
@@ -117,7 +118,7 @@ const cvPath = lang === "es" ? "/docs/CV_Juan_Manuel_Machado.pdf" : "/docs/CV_Ju
             <div class="pt-4">
               <p class="text-text-muted text-sm mb-3">Social</p>
               <div class="flex gap-3">
-                <a href="https://github.com/tuusuario" target="_blank" class="w-12 h-12 bg-surface-elevated hover:bg-primary/20 rounded-lg flex items-center justify-center transition-colors group">
+                <a href="https://github.com/juan1417" target="_blank" class="w-12 h-12 bg-surface-elevated hover:bg-primary/20 rounded-lg flex items-center justify-center transition-colors group">
                   <i class="fa-brands fa-github text-text-muted group-hover:text-primary text-2xl transition-colors"></i>
                 </a>
                 <a href="https://linkedin.com/in/tuusuario" target="_blank" class="w-12 h-12 bg-surface-elevated hover:bg-secondary/20 rounded-lg flex items-center justify-center transition-colors group">
@@ -165,7 +166,7 @@ const cvPath = lang === "es" ? "/docs/CV_Juan_Manuel_Machado.pdf" : "/docs/CV_Ju
             <button 
               type="submit"
               class="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 hover:scale-[1.02] flex items-center justify-center gap-2"
-            onclick="">
+            >
               <i class="fa-solid fa-paper-plane"></i>
               {t.about.mgs.input.summit}
             </button>

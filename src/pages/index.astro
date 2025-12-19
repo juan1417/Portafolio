@@ -5,6 +5,7 @@ import { getTranslations, type Language } from '../i18n/utils'
 const lang = (Astro.url.searchParams.get('lang') || 'en') as Language;
 const t = getTranslations(lang)
 const cvPath = lang === "es" ? "/docs/CV_Juan_Manuel_Machado.pdf" : "/docs/CV_Juan_Manuel_Machado_EN.pdf";
+const cvFileName = lang === "es" ? "CV_Juan_Manuel_Machado.pdf" : "CV_Juan_Manuel_Machado_EN.pdf";
 ---
 
 <Base>
@@ -25,7 +26,7 @@ const cvPath = lang === "es" ? "/docs/CV_Juan_Manuel_Machado.pdf" : "/docs/CV_Ju
             >
             <a 
                 href={cvPath}
-                download
+                download={cvFileName}
                 class="bg-transparent text-text px-8 py-3 rounded-full font-semibold cursor-pointer border border-text-muted/30 hover:border-text-muted hover:bg-surface-elevated transition-all flex items-center gap-2"
             >
                 <span class="material-symbols-outlined text-lg">download</span>
