@@ -27,6 +27,7 @@
         "name": "Pascual Bet",
         "description": "Betting website developed for a university project",
         "technologies": ["Vue", "NestJS", "JavaScript", "Node.js", "Vercel", "PostgreSQL"],
+        "link": "https://pascualbet.vercel.app/#/",
         "category": "web"
       },
       "storageManager": {
