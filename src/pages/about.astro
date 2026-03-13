@@ -1,7 +1,7 @@
 ---
 import Base from "../layout/base.astro";
 import { getTranslations, type Language } from "../i18n/utils";
-import Footer from "../components/footer.astro";
+import Footer from "../components/Footer.astro";
 const lang = (Astro.url.searchParams.get("lang") || "en") as Language;
 const t = getTranslations(lang);
 const cvPath = lang === "es" ? "/docs/CV_Juan_Manuel_Machado.pdf" : "/docs/CV_Juan_Manuel_Machado_EN.pdf";
@@ -121,7 +121,7 @@ const cvFileName = lang === "es" ? "CV_Juan_Manuel_Machado.pdf" : "CV_Juan_Manue
                 <a href="https://github.com/juan1417" target="_blank" class="w-12 h-12 bg-surface-elevated hover:bg-primary/20 rounded-lg flex items-center justify-center transition-colors group">
                   <i class="fa-brands fa-github text-text-muted group-hover:text-primary text-2xl transition-colors"></i>
                 </a>
-                <a href="https://linkedin.com/in/tuusuario" target="_blank" class="w-12 h-12 bg-surface-elevated hover:bg-secondary/20 rounded-lg flex items-center justify-center transition-colors group">
+                <a href="https://www.linkedin.com/in/juanmachado1234" target="_blank" class="w-12 h-12 bg-surface-elevated hover:bg-secondary/20 rounded-lg flex items-center justify-center transition-colors group">
                   <i class="fa-brands fa-linkedin text-text-muted group-hover:text-secondary text-2xl transition-colors"></i>
                 </a>
               </div>

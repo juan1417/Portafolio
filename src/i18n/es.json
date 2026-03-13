@@ -3,7 +3,8 @@
     "home": "Inicio",
     "projects": "Proyectos",
     "skills": "Habilidades y Tecnologías",
-    "about": "Acerca de/Contacto"
+    "about": "Acerca de/Contacto",
+    "hire": "Contrátame"
   },
   "home": {
     "title": "Desarrollador de Software",
@@ -16,43 +17,14 @@
     "description": "Proyectos en los que he trabajado",
     "viewProject": "Ver proyecto",
     "viewCode": "Ver código",
+    "noDescription": "Sin descripción.",
+    "noProjects": "No se encontraron proyectos.",
+    "fetchError": "No se pudieron cargar los proyectos desde GitHub. Intenta de nuevo más tarde.",
     "categories": {
       "all": "Todos",
       "web": "Web",
       "mobile": "Móvil",
       "desktop": "Escritorio"
-    },
-    "items": {
-      "pascualBet": {
-        "name": "Pascual Bet",
-        "description": "Página de apuestas desarrollada para un proyecto universitario",
-        "technologies": ["Vue", "NestJS", "JavaScript", "Node.js", "Vercel", "PostgreSQL"],
-        "category": "web"
-      },
-      "storageManager": {
-        "name": "Storage Manager",
-        "description": "Aplicación que ayuda a guardar y almacenar archivos y carpetas en un servidor personalizado o tipo SaaS",
-        "technologies": ["Kotlin"],
-        "category": "mobile"
-      },
-      "menuMaster": {
-        "name": "Menu Master",
-        "description": "Aplicación creada para ayudar a gestionar los pedidos y el inventario de un restaurante",
-        "technologies": ["C#", ".NET", "SQL Server"],
-        "category": "desktop"
-      },
-      "muelitasFelices": {
-        "name": "Muelitas Felices",
-        "description": "Aplicación desarrollada para gestionar citas odontológicas según cada necesidad o si requiere un especialista en cierta área",
-        "technologies": ["C#", ".NET", "SQL Server"],
-        "category": "desktop"
-      },
-      "ecommerce":{
-        "name": "Fast Shopping",
-        "description": "Plataforma de comercio electrónico con catálogo de productos, carrito de compras, sistema de pagos integrado con Wompi y facturación electrónica mediante Factus",
-        "technologies": ["PHP", "Laravel", "MySQL", "Wompi", "Factus"],
-        "category": "web"
-      }
     }
   },
   "skill": {
@@ -61,10 +33,12 @@
     "categories": {
       "backend": {
         "title": "Back End",
+        "description": "Construcción de lógica e infraestructura robusta del lado del servidor.",
         "technologies": ["Python", "Node.js", "Java", "Go"]
       },
       "frontend": {
         "title": "Front End",
+        "description": "Creación de interfaces de usuario hermosas e interactivas.",
         "technologies": [
           "React",
           "Angular",
@@ -78,19 +52,23 @@
       },
       "database": {
         "title": "Bases de Datos",
+        "description": "Gestión y almacenamiento de datos de forma eficiente y segura.",
         "technologies": ["SQL Server", "PostgreSQL", "MySQL", "MongoDB"]
       },
       "tools": {
         "title": "Herramientas",
+        "description": "Utilidades esenciales que agilizan mi flujo de trabajo.",
         "technologies": ["Git", "GitHub", "Figma"]
       },
       "devops": {
         "title": "DevOps & Despliegues",
+        "description": "Automatización de flujos de trabajo y despliegue en la nube.",
         "technologies": ["Vercel", "Supabase", "Cloudflare", "Azure", "AWS"]
       },
       "others": {
         "title": "Otros",
-        "technologies": ["C#", "Kotlin"]
+        "description": "Lenguajes y tecnologías adicionales con los que trabajo.",
+        "technologies": ["C#", "Kotlin", "TypeScript"]
       }
     }
   },
@@ -131,5 +109,8 @@
   },
   "language": {
     "select": "Idioma"
+  },
+  "footer": {
+    "rights": "Todos los derechos reservados."
   }
 }

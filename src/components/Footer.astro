@@ -6,26 +6,26 @@ const t = getTranslations(lang)
 ---
 
 
-<footer class="bg-surface py-8 mt-auto">
+<footer class="bg-surface py-6 md:py-8 mt-auto">
     <div class="max-w-6xl mx-auto px-4">
-        <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div>
-                <ul class="flex gap-6 text-text-muted">
+        <div class="flex flex-col items-center gap-6">
+            <div class="order-2 md:order-1">
+                <ul class="flex flex-wrap justify-center gap-4 md:gap-6 text-text-muted text-sm md:text-base">
                     <li><a href={`/?lang=${lang}`} class="hover:text-primary transition-colors">{t.nav.home}</a></li>
                     <li><a href={`/projects?lang=${lang}`} class="hover:text-primary transition-colors">{t.nav.projects}</a></li>
                     <li><a href={`/skills?lang=${lang}`} class="hover:text-primary transition-colors">{t.nav.skills}</a></li>
                     <li><a href={`/about?lang=${lang}`} class="hover:text-primary transition-colors">{t.nav.about}</a></li>
                 </ul>
             </div>
-            <div>
+            <div class="order-1 md:order-2">
                 <ul class="flex gap-4">
-                    <li><a href="#" class="text-text-muted hover:text-primary transition-colors text-xl"><i class="fa-brands fa-github"></i></a></li>
-                    <li><a href="#" class="text-text-muted hover:text-primary transition-colors text-xl"><i class="fa-brands fa-linkedin"></i></a></li>
+                    <li><a href="https://github.com/juan1417" target="_blank" class="text-text-muted hover:text-primary transition-colors text-2xl md:text-xl"><i class="fa-brands fa-github"></i></a></li>
+                    <li><a href="https://www.linkedin.com/in/juanmachado1234" target="_blank" class="text-text-muted hover:text-secondary transition-colors text-2xl md:text-xl"><i class="fa-brands fa-linkedin"></i></a></li>
                 </ul>
             </div>
         </div>
         <div class="border-t border-surface-elevated mt-6 pt-6">
-            <p class="text-text-muted text-center text-sm">© {new Date().getFullYear()} Todos los derechos reservados.</p>
+            <p class="text-text-muted text-center text-xs md:text-sm">© {new Date().getFullYear()} Juan Manuel Machado. {t.footer.rights}</p>
         </div>
     </div>
 </footer>

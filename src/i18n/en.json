@@ -3,7 +3,8 @@
     "home": "Home",
     "projects": "Projects",
     "skills": "Skills & Technologies",
-    "about": "About/Contact"
+    "about": "About/Contact",
+    "hire": "Hire Me"
   },
   "home": {
     "title": "Software Developer",
@@ -16,43 +17,14 @@
     "description": "Projects I have worked on",
     "viewProject": "View project",
     "viewCode": "View code",
+    "noDescription": "No description provided.",
+    "noProjects": "No projects found.",
+    "fetchError": "Could not load projects from GitHub. Please try again later.",
     "categories": {
       "all": "All",
       "web": "Web",
       "mobile": "Mobile",
       "desktop": "Desktop"
-    },
-    "items": {
-      "pascualBet": {
-        "name": "Pascual Bet",
-        "description": "Betting website developed for a university project",
-        "technologies": ["Vue", "NestJS", "JavaScript", "Node.js", "Vercel", "PostgreSQL"],
-        "category": "web"
-      },
-      "storageManager": {
-        "name": "Storage Manager",
-        "description": "App that helps store and manage files and folders on a custom server or SaaS-type service",
-        "technologies": ["Kotlin"],
-        "category": "mobile"
-      },
-      "menuMaster": {
-        "name": "Menu Master",
-        "description": "Application created to help manage orders and inventory for a restaurant",
-        "technologies": ["C#", ".NET", "SQL Server"],
-        "category": "desktop"
-      },
-      "muelitasFelices": {
-        "name": "Muelitas Felices",
-        "description": "Application developed to manage dental appointments based on each need or if a specialist is required in a certain area",
-        "technologies": ["C#", ".NET", "SQL Server"],
-        "category": "desktop"
-      },
-      "ecommerce": {
-        "name": "Fast Shopping",
-        "description": "E-commerce platform with product catalog, shopping cart, payment system integrated with Wompi and electronic invoicing through Factus",
-        "technologies": ["PHP", "Laravel", "MySQL", "Wompi", "Factus"],
-        "category": "web"
-      }
     }
   },
   "skill": {
@@ -61,27 +33,33 @@
     "categories": {
       "backend": {
         "title": "Back End",
+        "description": "Building robust server-side logic and infrastructure.",
         "technologies": ["Python", "Node.js", "Java", "Go"]
       },
       "frontend": {
         "title": "Front End",
+        "description": "Crafting beautiful and interactive user interfaces.",
         "technologies": ["React", "Angular", "Vue", "JavaScript", "HTML", "Tailwind CSS", "PHP", "Laravel"]
       },
       "database": {
         "title": "Databases",
+        "description": "Managing and storing data efficiently and securely.",
         "technologies": ["SQL Server", "PostgreSQL", "MySQL", "MongoDB"]
       },
       "tools": {
         "title": "Tools",
+        "description": "Essential utilities that streamline my development workflow.",
         "technologies": ["Git", "GitHub", "Figma"]
       },
       "devops": {
         "title": "DevOps & Deployments",
+        "description": "Automating workflows and deploying applications to the cloud.",
         "technologies": ["Vercel", "Supabase", "Cloudflare", "Azure", "AWS"]
       },
       "others": {
         "title": "Others",
-        "technologies": ["C#", "Kotlin"]
+        "description": "Additional languages and technologies I work with.",
+        "technologies": ["C#", "Kotlin", "TypeScript"]
       }
     }
   },
@@ -122,5 +100,8 @@
   },
   "language": {
     "select": "Language"
+  },
+  "footer": {
+    "rights": "All rights reserved."
   }
 }

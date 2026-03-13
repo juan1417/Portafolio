@@ -9,12 +9,24 @@ const lang = (Astro.url.searchParams.get('lang') || 'en') as Language;
 const t = getTranslations(lang)
 ---
 
-<nav class="flex items-center justify-between p-4 bg-surface">
+<nav class="flex items-center justify-between p-4 bg-surface relative">
   <div class="flex items-center gap-3">
-    <img src="" alt="" class="w-20 h-auto" />
-    <h2 class="text-text text-xl font-bold">CodingSpace </h2>
+    <a href={`/?lang=${lang}`} class="text-text text-lg md:text-xl font-bold hover:text-primary transition-colors">Juan Manuel Machado</a>
   </div>
-  <div class="flex items-center gap-6">
+  
+  <!-- Hamburger Button (Mobile) -->
+  <button 
+    id="menu-toggle" 
+    class="md:hidden flex flex-col gap-1.5 p-2 z-50"
+    aria-label="Toggle menu"
+  >
+    <span class="hamburger-line w-6 h-0.5 bg-text transition-all duration-300"></span>
+    <span class="hamburger-line w-6 h-0.5 bg-text transition-all duration-300"></span>
+    <span class="hamburger-line w-6 h-0.5 bg-text transition-all duration-300"></span>
+  </button>
+
+  <!-- Desktop Menu -->
+  <div class="hidden md:flex items-center gap-6">
     <ul class="flex gap-6 list-none">
       <li>
         <a
@@ -54,24 +66,114 @@ const t = getTranslations(lang)
         <option value="es" selected={lang === 'es'}>Español</option>
       </select>
     </form>
+    <a href={`/about?lang=${lang}#contact`} class="bg-primary text-text px-4 py-2 rounded-full font-semibold text-sm hover:opacity-90 hover:scale-105 transition-all whitespace-nowrap">{t.nav.hire}</a>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="fixed inset-0 bg-background/95 backdrop-blur-sm z-40 flex flex-col items-center justify-center gap-8 transform translate-x-full transition-transform duration-300 md:hidden">
+    <ul class="flex flex-col gap-6 list-none text-center">
+      <li>
+        <a
+          href={`/?lang=${lang}`}
+          class="text-text text-2xl font-medium hover:text-primary cursor-pointer transition-colors"
+          >{t.nav.home}</a>
+      </li>
+      <li>
+        <a
+          href={`/projects?lang=${lang}`}
+          class="text-text text-2xl font-medium hover:text-primary cursor-pointer transition-colors"
+          >{t.nav.projects}</a>
+      </li>
+      <li>
+        <a
+          href={`/skills?lang=${lang}`}
+          class="text-text text-2xl font-medium hover:text-primary cursor-pointer transition-colors"
+          >{t.nav.skills}</a>
+      </li>
+      <li>
+        <a
+          href={`/about?lang=${lang}`}
+          class="text-text text-2xl font-medium hover:text-primary cursor-pointer transition-colors"
+          >{t.nav.about}</a>
+      </li>
+    </ul>
+    <form class="flex items-center gap-2">
+      <span class="material-symbols-outlined text-text-muted text-xl">language</span>
+      <select
+        id="language-select-mobile"
+        name="language"
+        class="bg-surface-elevated text-text px-4 py-2 rounded border border-primary/20 focus:outline-none focus:border-primary cursor-pointer font-['Inter']"
+        aria-label={t.language.select}
+      >
+        <option value="en" selected={lang === 'en'}>English</option>
+        <option value="es" selected={lang === 'es'}>Español</option>
+      </select>
+    </form>
+    <a href={`/about?lang=${lang}#contact`} class="bg-primary text-text px-6 py-3 rounded-full font-semibold hover:opacity-90 transition-all">{t.nav.hire}</a>
   </div>
 </nav>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const select = document.getElementById('language-select') as HTMLSelectElement
+    const selectMobile = document.getElementById('language-select-mobile') as HTMLSelectElement
+    const menuToggle = document.getElementById('menu-toggle')
+    const mobileMenu = document.getElementById('mobile-menu')
     const currentLang = new URLSearchParams(window.location.search).get('lang') || 'en'
+    
+    // Language select handlers
+    const handleLangChange = (e: Event) => {
+      const newLang = (e.target as HTMLSelectElement).value
+      const url = new URL(window.location.href)
+      url.searchParams.set('lang', newLang)
+      window.location.href = url.toString()
+    }
     
     if (select) {
       select.value = currentLang
-      
-      select.addEventListener('change', (e) => {
-        const newLang = (e.target as HTMLSelectElement).value
-        console.log(newLang);
+      select.addEventListener('change', handleLangChange)
+    }
+    
+    if (selectMobile) {
+      selectMobile.value = currentLang
+      selectMobile.addEventListener('change', handleLangChange)
+    }
+
+    // Mobile menu toggle
+    if (menuToggle && mobileMenu) {
+      menuToggle.addEventListener('click', () => {
+        const isOpen = !mobileMenu.classList.contains('translate-x-full')
         
-        const url = new URL(window.location.href)
-        url.searchParams.set('lang', newLang)
-        window.location.href = url.toString()
+        if (isOpen) {
+          mobileMenu.classList.add('translate-x-full')
+          mobileMenu.classList.remove('translate-x-0')
+          document.body.style.overflow = ''
+        } else {
+          mobileMenu.classList.remove('translate-x-full')
+          mobileMenu.classList.add('translate-x-0')
+          document.body.style.overflow = 'hidden'
+        }
+        
+        // Animate hamburger
+        const lines = menuToggle.querySelectorAll('.hamburger-line')
+        lines.forEach((line, index) => {
+          if (!isOpen) {
+            if (index === 0) line.classList.add('rotate-45', 'translate-y-2')
+            if (index === 1) line.classList.add('opacity-0')
+            if (index === 2) line.classList.add('-rotate-45', '-translate-y-2')
+          } else {
+            line.classList.remove('rotate-45', 'translate-y-2', 'opacity-0', '-rotate-45', '-translate-y-2')
+          }
+        })
+      })
+
+      // Close menu when clicking a link
+      mobileMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.add('translate-x-full')
+          mobileMenu.classList.remove('translate-x-0')
+          document.body.style.overflow = ''
+        })
       })
     }
   })

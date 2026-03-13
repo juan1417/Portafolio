@@ -2,113 +2,247 @@
 import Base from "../layout/base.astro";
 import Footer from "../components/Footer.astro";
 import { getTranslations, type Language } from "../i18n/utils";
+
 const lang = (Astro.url.searchParams.get("lang") || "en") as Language;
 const t = getTranslations(lang);
 
-const projects = t.projects.items;
+// Repos to exclude (profile readme, portfolio itself, throwaway names)
+const EXCLUDED_REPOS = new Set([
+  "juan1417",
+  "Portafolio",
+  "stunning-octo-chainsaw",
+  "effective-octo-spork",
+]);
 
-const techIcons: Record<string, string> = {
-  "Vue": "devicon-vuejs-plain",
-  "NestJS": "devicon-nestjs-original",
-  "JavaScript": "devicon-javascript-plain",
-  "Node.js": "devicon-nodejs-plain",
-  "Vercel": "devicon-vercel-original",
-  "postgres": "devicon-postgresql-plain",
-  "Kotlin": "devicon-kotlin-plain",
-  "C#": "devicon-csharp-plain",
-  ".NET": "devicon-dotnetcore-plain",
-  "SQL Server": "devicon-microsoftsqlserver-plain",
-  "PHP": "devicon-php-plain",
-  "Laravel": "devicon-laravel-original",
-  "MySQL": "devicon-mysql-plain",
-  "Wompi": "fa-solid fa-credit-card",
-  "Factus": "fa-solid fa-file-invoice",
+interface GitHubRepo {
+  name: string;
+  description: string | null;
+  html_url: string;
+  homepage: string | null;
+  language: string | null;
+  topics: string[];
+  updated_at: string;
+  fork: boolean;
+}
+
+let repos: GitHubRepo[] = [];
+let fetchError = false;
+
+try {
+  const res = await fetch(
+    "https://api.github.com/users/juan1417/repos?per_page=100&sort=updated",
+    { headers: { Accept: "application/vnd.github+json" } }
+  );
+  if (res.ok) {
+    const all: GitHubRepo[] = await res.json();
+    repos = all.filter(
+      (r) => !r.fork && !EXCLUDED_REPOS.has(r.name)
+    );
+  } else {
+    fetchError = true;
+  }
+} catch {
+  fetchError = true;
+}
+
+// Map a GitHub language to a Devicon / Font Awesome class
+const langIcons: Record<string, string> = {
+  "JavaScript":  "devicon-javascript-plain",
+  "TypeScript":  "devicon-typescript-plain",
+  "Python":      "devicon-python-plain",
+  "PHP":         "devicon-php-plain",
+  "Kotlin":      "devicon-kotlin-plain",
+  "Java":        "devicon-java-plain",
+  "C#":          "devicon-csharp-plain",
+  "Go":          "devicon-go-plain",
+  "Astro":       "devicon-astro-plain",
+  "HTML":        "devicon-html5-plain",
+  "CSS":         "devicon-css3-plain",
 };
+
+// Map a topic string to an icon class (best-effort)
+const topicIcons: Record<string, string> = {
+  "vue":          "devicon-vuejs-plain",
+  "vuejs":        "devicon-vuejs-plain",
+  "react":        "devicon-react-original",
+  "angular":      "devicon-angular-plain",
+  "nestjs":       "devicon-nestjs-original",
+  "nodejs":       "devicon-nodejs-plain",
+  "node":         "devicon-nodejs-plain",
+  "laravel":      "devicon-laravel-original",
+  "dotnet":       "devicon-dotnetcore-plain",
+  "net":          "devicon-dotnetcore-plain",
+  "postgresql":   "devicon-postgresql-plain",
+  "postgres":     "devicon-postgresql-plain",
+  "mysql":        "devicon-mysql-plain",
+  "mongodb":      "devicon-mongodb-plain",
+  "sqlserver":    "devicon-microsoftsqlserver-plain",
+  "vercel":       "devicon-vercel-original",
+  "tailwind":     "devicon-tailwindcss-original",
+  "tailwindcss":  "devicon-tailwindcss-original",
+  "git":          "devicon-git-plain",
+  "docker":       "devicon-docker-plain",
+  "supabase":     "devicon-supabase-plain",
+  "azure":        "devicon-azure-plain",
+  "aws":          "devicon-amazonwebservices-plain-wordmark",
+};
+
+// Derive a display category from topics (falls back to "web")
+function getCategory(repo: GitHubRepo): string {
+  const topics = repo.topics.map((t) => t.toLowerCase());
+  if (topics.includes("mobile") || topics.includes("android") || topics.includes("ios")) return "mobile";
+  if (topics.includes("desktop") || topics.includes("winforms") || topics.includes("wpf")) return "desktop";
+  return "web";
+}
+
+// Build the list of badge tags for a repo: topics first, then language as fallback
+function getTags(repo: GitHubRepo): string[] {
+  if (repo.topics.length > 0) return repo.topics;
+  if (repo.language) return [repo.language];
+  return [];
+}
 ---
 
 <Base>
-  <main class="flex-1 max-w-6xl mx-auto px-4 py-12 w-full">
-    <div class="text-center mb-12">
-      <h1 class="text-4xl md:text-5xl font-bold text-text mb-4">{t.projects.title}</h1>
-      <p class="text-text-muted text-lg">{t.projects.description}</p>
+  <main class="flex-1 max-w-6xl mx-auto px-4 py-8 md:py-12 w-full">
+    <div class="text-center mb-8 md:mb-12">
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-text mb-4">{t.projects.title}</h1>
+      <p class="text-text-muted text-base md:text-lg">{t.projects.description}</p>
     </div>
-    <div class="flex justify-center mb-10">
-      <ul class="flex gap-2 bg-surface p-2 rounded-xl">
+
+    <!-- Category filter -->
+    <div class="flex justify-center mb-8 md:mb-10 overflow-x-auto pb-2">
+      <ul class="flex gap-1 sm:gap-2 bg-surface p-1.5 sm:p-2 rounded-xl">
         <li>
-          <button type="button" data-category="all" class="filter-btn px-4 py-2 rounded-lg text-text-muted hover:text-text hover:bg-surface-elevated transition-all">{t.projects.categories.all}</button>
+          <button type="button" data-category="all" class="filter-btn px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-sm sm:text-base text-text-muted hover:text-text hover:bg-surface-elevated transition-all whitespace-nowrap">{t.projects.categories.all}</button>
         </li>
         <li>
-          <button type="button" data-category="web" class="filter-btn px-4 py-2 rounded-lg text-text-muted hover:text-text hover:bg-surface-elevated transition-all">{t.projects.categories.web}</button>
+          <button type="button" data-category="web" class="filter-btn px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-sm sm:text-base text-text-muted hover:text-text hover:bg-surface-elevated transition-all whitespace-nowrap">{t.projects.categories.web}</button>
         </li>
         <li>
-          <button type="button" data-category="mobile" class="filter-btn px-4 py-2 rounded-lg text-text-muted hover:text-text hover:bg-surface-elevated transition-all">{t.projects.categories.mobile}</button>
+          <button type="button" data-category="mobile" class="filter-btn px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-sm sm:text-base text-text-muted hover:text-text hover:bg-surface-elevated transition-all whitespace-nowrap">{t.projects.categories.mobile}</button>
         </li>
         <li>
-          <button type="button" data-category="desktop" class="filter-btn px-4 py-2 rounded-lg text-text-muted hover:text-text hover:bg-surface-elevated transition-all">{t.projects.categories.desktop}</button>
+          <button type="button" data-category="desktop" class="filter-btn px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-sm sm:text-base text-text-muted hover:text-text hover:bg-surface-elevated transition-all whitespace-nowrap">{t.projects.categories.desktop}</button>
         </li>
       </ul>
     </div>
-    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {Object.entries(projects).map(([key, value]) => (
-        <article 
-          class="project-card bg-surface rounded-2xl overflow-hidden border border-surface-elevated hover:border-primary/50 transition-all duration-300 hover:-translate-y-1"
-          data-category={value.category}
-        >
-          <div class="h-48 bg-surface-elevated flex items-center justify-center">
-            <i class="fa-solid fa-image text-4xl text-text-muted/30"></i>
-          </div>
-          <div class="p-6">
-            <h2 class="text-xl font-bold text-text mb-2">{value.name}</h2>
-            <p class="text-text-muted text-sm mb-4 line-clamp-3">{value.description}</p>
-            <div class="flex flex-wrap gap-2 mb-4">
-              {value.technologies.map((tech: string) => (
-                <span class="flex items-center gap-1 text-xs bg-surface-elevated px-2 py-1 rounded-full text-text-muted">
-                  <i class={techIcons[tech] || "fa-solid fa-code"}></i>
-                  {tech}
-                </span>
-              ))}
-            </div>
-            <div class="flex gap-3">
-              <a href="#" class="flex-1 text-center px-4 py-2 bg-primary text-text rounded-lg hover:bg-primary/80 transition-colors text-sm font-medium">
-                <i class="fa-solid fa-external-link-alt mr-2"></i>{t.projects.viewProject}
-              </a>
-              <a href="#" class="px-4 py-2 border border-text-muted/30 text-text-muted rounded-lg hover:border-primary hover:text-primary transition-colors text-sm">
-                <i class="fa-brands fa-github"></i>
-              </a>
-            </div>
-          </div>
-        </article>
-      ))}
-    </section>
+
+    <!-- Error state -->
+    {fetchError && (
+      <p class="text-center text-text-muted py-12">
+        <i class="fa-solid fa-triangle-exclamation mr-2 text-warning"></i>
+        {t.projects.fetchError}
+      </p>
+    )}
+
+    <!-- Projects grid -->
+    {!fetchError && repos.length === 0 && (
+      <p class="text-center text-text-muted py-12">{t.projects.noProjects}</p>
+    )}
+
+    {!fetchError && repos.length > 0 && (
+      <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        {repos.map((repo) => {
+          const category = getCategory(repo);
+          const tags = getTags(repo);
+          return (
+            <article
+              class="project-card bg-surface rounded-2xl overflow-hidden border border-surface-elevated hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 flex flex-col"
+              data-category={category}
+            >
+              <!-- Repo header band -->
+              <div class="h-2 bg-gradient-to-r from-primary to-secondary"></div>
+
+              <div class="p-6 flex flex-col flex-1">
+                <!-- Name + language icon -->
+                <div class="flex items-start justify-between gap-2 mb-2">
+                  <h2 class="text-xl font-bold text-text leading-tight">{repo.name}</h2>
+                  {repo.language && (
+                    <span class="shrink-0 text-text-muted" title={repo.language}>
+                      <i class={`${langIcons[repo.language] || "fa-solid fa-code"} text-xl`}></i>
+                    </span>
+                  )}
+                </div>
+
+                <!-- Description -->
+                <p class="text-text-muted text-sm mb-4 line-clamp-3 flex-1">
+                  {repo.description || t.projects.noDescription}
+                </p>
+
+                <!-- Topics / tech tags -->
+                {tags.length > 0 && (
+                  <div class="flex flex-wrap gap-2 mb-4">
+                    {tags.map((tag) => (
+                      <span class="flex items-center gap-1 text-xs bg-surface-elevated px-2 py-1 rounded-full text-text-muted">
+                        <i class={`${topicIcons[tag.toLowerCase()] || "fa-solid fa-tag"} text-xs`}></i>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                <!-- Action buttons -->
+                <div class="flex gap-3 mt-auto">
+                  {repo.homepage ? (
+                    <a
+                      href={repo.homepage}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="flex-1 text-center px-4 py-2 bg-primary text-text rounded-lg hover:bg-primary/80 transition-colors text-sm font-medium"
+                    >
+                      <i class="fa-solid fa-external-link-alt mr-2"></i>{t.projects.viewProject}
+                    </a>
+                  ) : (
+                    <span class="flex-1 text-center px-4 py-2 bg-surface-elevated text-text-muted rounded-lg text-sm font-medium cursor-default">
+                      <i class="fa-solid fa-external-link-alt mr-2 opacity-40"></i>{t.projects.viewProject}
+                    </span>
+                  )}
+                  <a
+                    href={repo.html_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="px-4 py-2 border border-text-muted/30 text-text-muted rounded-lg hover:border-primary hover:text-primary transition-colors text-sm"
+                    title={t.projects.viewCode}
+                  >
+                    <i class="fa-brands fa-github"></i>
+                  </a>
+                </div>
+              </div>
+            </article>
+          );
+        })}
+      </section>
+    )}
   </main>
   <Footer />
 </Base>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const projects = document.querySelectorAll('.project-card');
+    const filterBtns = document.querySelectorAll('.filter-btn')
+    const projects = document.querySelectorAll('.project-card')
 
     filterBtns.forEach(btn => {
       btn.addEventListener('click', () => {
-        filterBtns.forEach(b => b.classList.remove('bg-primary', 'text-text'));
-        btn.classList.add('bg-primary', 'text-text');
-        
-        const category = btn.getAttribute('data-category');
-        
-        projects.forEach(project => {
-          const projectCategory = project.getAttribute('data-category');
-          if (category === 'all' || projectCategory === category) {
-            project.classList.remove('hidden');
-          } else {
-            project.classList.add('hidden');
-          }
-        });
-      });
-    });
+        filterBtns.forEach(b => b.classList.remove('bg-primary', 'text-text'))
+        btn.classList.add('bg-primary', 'text-text')
 
-    filterBtns[0]?.classList.add('bg-primary', 'text-text');
-  });
+        const category = btn.getAttribute('data-category')
+
+        projects.forEach(project => {
+          const projectCategory = project.getAttribute('data-category')
+          if (category === 'all' || projectCategory === category) {
+            project.classList.remove('hidden')
+          } else {
+            project.classList.add('hidden')
+          }
+        })
+      })
+    })
+
+    filterBtns[0]?.classList.add('bg-primary', 'text-text')
+  })
 </script>
 
 <style>
