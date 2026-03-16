@@ -25,6 +25,39 @@
       "web": "Web",
       "mobile": "Móvil",
       "desktop": "Escritorio"
+    },
+    "items": {
+      "pascualBet": {
+        "name": "Pascual Bet",
+        "description": "Página de apuestas desarrollada para un proyecto universitario",
+        "technologies": ["Vue", "NestJS", "JavaScript", "Node.js", "Vercel", "PostgreSQL", "nestJs"],
+        "link": "https://pascualbet.vercel.app/#/",
+        "category": "web"
+      },
+      "storageManager": {
+        "name": "Storage Manager",
+        "description": "Aplicación que ayuda a guardar y almacenar archivos y carpetas en un servidor personalizado o tipo SaaS",
+        "technologies": ["Kotlin"],
+        "category": "mobile"
+      },
+      "menuMaster": {
+        "name": "Menu Master",
+        "description": "Aplicación creada para ayudar a gestionar los pedidos y el inventario de un restaurante",
+        "technologies": ["C#", ".NET", "SQL Server"],
+        "category": "desktop"
+      },
+      "muelitasFelices": {
+        "name": "Muelitas Felices",
+        "description": "Aplicación desarrollada para gestionar citas odontológicas según cada necesidad o si requiere un especialista en cierta área",
+        "technologies": ["C#", ".NET", "SQL Server"],
+        "category": "desktop"
+      },
+      "ecommerce":{
+        "name": "Fast Shopping",
+        "description": "Plataforma de comercio electrónico con catálogo de productos, carrito de compras, sistema de pagos integrado con Wompi y facturación electrónica mediante Factus",
+        "technologies": ["PHP", "Laravel", "MySQL", "Wompi", "Factus"],
+        "category": "web"
+      }
     }
   },
   "skill": {
