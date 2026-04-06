@@ -20,9 +20,11 @@ interface GitHubRepo {
   html_url: string;
   homepage: string | null;
   language: string | null;
+  languages_url: string;
   topics: string[];
   updated_at: string;
   fork: boolean;
+  languages?: string[];
 }
 
 let repos: GitHubRepo[] = [];
@@ -35,9 +37,25 @@ try {
   );
   if (res.ok) {
     const all: GitHubRepo[] = await res.json();
-    repos = all.filter(
+    const filtered = all.filter(
       (r) => !r.fork && !EXCLUDED_REPOS.has(r.name)
     );
+    repos = await Promise.all(
+      filtered.map(async (repo) => {
+        try {
+          const langRes = await fetch(repo.languages_url, {
+            headers: { Accept: "application/vnd.github+json" },
+          })
+          if (!langRes.ok) return repo
+
+          const langData = await langRes.json() as Record<string, number>
+          const languages = Object.keys(langData)
+          return { ...repo, languages }
+        } catch {
+          return repo
+        }
+      })
+    )
   } else {
     fetchError = true;
   }
@@ -52,8 +70,14 @@ const langIcons: Record<string, string> = {
   "Python":      "devicon-python-plain",
   "PHP":         "devicon-php-plain",
   "Kotlin":      "devicon-kotlin-plain",
+  "Dart":        "devicon-dart-plain",
+  "Swift":       "devicon-swift-plain",
   "Java":        "devicon-java-plain",
   "C#":          "devicon-csharp-plain",
+  "C++":         "devicon-cplusplus-plain",
+  "C":           "devicon-c-plain",
+  "Objective-C": "devicon-objectivec-plain",
+  "CMake":       "devicon-cmake-plain",
   "Go":          "devicon-go-plain",
   "Astro":       "devicon-astro-plain",
   "HTML":        "devicon-html5-plain",
@@ -147,9 +171,20 @@ function getCategories(repo: GitHubRepo): RepoCategory[] {
 
 // Build the list of badge tags for a repo: topics first, then language as fallback
 function getTags(repo: GitHubRepo): string[] {
+  if (repo.languages && repo.languages.length > 0) return repo.languages
   if (repo.topics.length > 0) return repo.topics;
   if (repo.language) return [repo.language];
   return [];
+}
+
+function getTagIcon(tag: string): string {
+  const exactLanguageIcon = langIcons[tag]
+  if (exactLanguageIcon) return exactLanguageIcon
+
+  const topicIcon = topicIcons[tag.toLowerCase()]
+  if (topicIcon) return topicIcon
+
+  return "fa-solid fa-tag"
 }
 ---
 
@@ -225,7 +260,7 @@ function getTags(repo: GitHubRepo): string[] {
                   <div class="flex flex-wrap gap-2 mb-4">
                     {tags.map((tag) => (
                       <span class="flex items-center gap-1 text-xs bg-surface-elevated px-2 py-1 rounded-full text-text-muted">
-                        <i class={`${topicIcons[tag.toLowerCase()] || "fa-solid fa-tag"} text-xs`}></i>
+                        <i class={`${getTagIcon(tag)} text-xs`}></i>
                         {tag}
                       </span>
                     ))}
