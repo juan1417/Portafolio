@@ -20,8 +20,8 @@ interface GitHubRepo {
   html_url: string;
   homepage: string | null;
   language: string | null;
-  languages_url: string;
-  topics: string[];
+  languages_url?: string;
+  topics?: string[];
   updated_at: string;
   fork: boolean;
   languages?: string[];
@@ -42,17 +42,21 @@ try {
     );
     repos = await Promise.all(
       filtered.map(async (repo) => {
+        const safeTopics = Array.isArray(repo.topics) ? repo.topics : []
+
         try {
+          if (!repo.languages_url) return { ...repo, topics: safeTopics }
+
           const langRes = await fetch(repo.languages_url, {
             headers: { Accept: "application/vnd.github+json" },
           })
-          if (!langRes.ok) return repo
+          if (!langRes.ok) return { ...repo, topics: safeTopics }
 
           const langData = await langRes.json() as Record<string, number>
           const languages = Object.keys(langData)
-          return { ...repo, languages }
+          return { ...repo, topics: safeTopics, languages }
         } catch {
-          return repo
+          return { ...repo, topics: safeTopics }
         }
       })
     )
@@ -142,7 +146,7 @@ function getCategories(repo: GitHubRepo): RepoCategory[] {
   const override = CATEGORY_OVERRIDES[normalizedName]
   if (override) return override
 
-  const topics = repo.topics.map((t) => t.toLowerCase())
+  const topics = (repo.topics || []).map((t) => t.toLowerCase())
   const text = `${repo.name} ${repo.description || ""}`.toLowerCase()
 
   const isMobile = topics.includes("mobile")
@@ -172,7 +176,7 @@ function getCategories(repo: GitHubRepo): RepoCategory[] {
 // Build the list of badge tags for a repo: topics first, then language as fallback
 function getTags(repo: GitHubRepo): string[] {
   if (repo.languages && repo.languages.length > 0) return repo.languages
-  if (repo.topics.length > 0) return repo.topics;
+  if (repo.topics && repo.topics.length > 0) return repo.topics;
   if (repo.language) return [repo.language];
   return [];
 }

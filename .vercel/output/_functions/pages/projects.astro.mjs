@@ -29,16 +29,18 @@ const $$Projects = createComponent(async ($$result, $$props, $$slots) => {
       );
       repos = await Promise.all(
         filtered.map(async (repo) => {
+          const safeTopics = Array.isArray(repo.topics) ? repo.topics : [];
           try {
+            if (!repo.languages_url) return { ...repo, topics: safeTopics };
             const langRes = await fetch(repo.languages_url, {
               headers: { Accept: "application/vnd.github+json" }
             });
-            if (!langRes.ok) return repo;
+            if (!langRes.ok) return { ...repo, topics: safeTopics };
             const langData = await langRes.json();
             const languages = Object.keys(langData);
-            return { ...repo, languages };
+            return { ...repo, topics: safeTopics, languages };
           } catch {
-            return repo;
+            return { ...repo, topics: safeTopics };
           }
         })
       );
@@ -113,7 +115,7 @@ const $$Projects = createComponent(async ($$result, $$props, $$slots) => {
     const normalizedName = normalizeRepoName(repo.name);
     const override = CATEGORY_OVERRIDES[normalizedName];
     if (override) return override;
-    const topics = repo.topics.map((t2) => t2.toLowerCase());
+    const topics = (repo.topics || []).map((t2) => t2.toLowerCase());
     const text = `${repo.name} ${repo.description || ""}`.toLowerCase();
     const isMobile = topics.includes("mobile") || topics.includes("android") || topics.includes("ios") || topics.includes("flutter") || topics.includes("dart") || text.includes("mobile") || text.includes("m\xF3vil") || text.includes("movil");
     const isDesktop = topics.includes("desktop") || topics.includes("winforms") || topics.includes("wpf") || text.includes("desktop") || text.includes("escritorio") || text.includes("winforms") || text.includes("wpf");
@@ -124,7 +126,7 @@ const $$Projects = createComponent(async ($$result, $$props, $$slots) => {
   }
   function getTags(repo) {
     if (repo.languages && repo.languages.length > 0) return repo.languages;
-    if (repo.topics.length > 0) return repo.topics;
+    if (repo.topics && repo.topics.length > 0) return repo.topics;
     if (repo.language) return [repo.language];
     return [];
   }
