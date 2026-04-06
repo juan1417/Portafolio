@@ -1,43 +1,46 @@
-# Astro Starter Kit: Minimal
+# Juan Manuel Machado - Portfolio
 
-```sh
-npm create astro@latest -- --template minimal
-```
+Personal portfolio built with Astro v5, Tailwind CSS v4, and TypeScript.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Stack
 
-## 🚀 Project Structure
+- Astro (SSR mode)
+- Tailwind CSS v4
+- TypeScript
+- Astro Vercel adapter (`@astrojs/vercel`)
 
-Inside of your Astro project, you'll see the following folders and files:
+## Commands
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+Run all commands from the project root using `pnpm`.
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+| Command | Description |
+| :------ | :---------- |
+| `pnpm install` | Install dependencies |
+| `pnpm dev` | Start local dev server at `http://localhost:4321` |
+| `pnpm astro check` | Run Astro + TypeScript checks |
+| `pnpm build` | Build production output (SSR) |
+| `pnpm preview` | Preview built output locally |
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## SSR Build and Deploy (Vercel)
 
-Any static assets, like images, can be placed in the `public/` directory.
+This project uses `output: 'server'` and requires an Astro adapter for production builds.
+The adapter is already configured in `astro.config.mjs`:
 
-## 🧞 Commands
+- `adapter: vercel()`
 
-All commands are run from the root of the project, from a terminal:
+### Deploy steps
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+1. Push your changes to GitHub.
+2. Import the repository in Vercel.
+3. Keep default build settings:
+   - Install command: `pnpm install`
+   - Build command: `pnpm build`
+4. Deploy.
 
-## 👀 Want to learn more?
+Vercel will use the generated `.vercel/output` server artifacts during deployment.
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## Local behavior
+
+Local development remains unchanged after SSR adapter setup:
+
+- `pnpm dev` still runs the site locally at `http://localhost:4321`.
