@@ -4,8 +4,8 @@ import { getTranslations, type Language } from "../i18n/utils";
 import Footer from "../components/Footer.astro";
 const lang = (Astro.url.searchParams.get("lang") || "en") as Language;
 const t = getTranslations(lang);
-const cvPath = lang === "es" ? "/docs/CV_Juan_Manuel_Machado.pdf" : "/docs/CV_Juan_Manuel_Machado_EN.pdf";
-const cvFileName = lang === "es" ? "CV_Juan_Manuel_Machado.pdf" : "CV_Juan_Manuel_Machado_EN.pdf";
+const cvPath = lang === "es" ? "docs/Desarrollador de Software.pdf" : "docs/Software Developer.pdf";
+const cvFileName = lang === "es" ? "Desarrollador de Software.pdf" : "Software Developer.pdf";
 ---
 
 <Base>
@@ -18,11 +18,12 @@ const cvFileName = lang === "es" ? "CV_Juan_Manuel_Machado.pdf" : "CV_Juan_Manue
           <!-- Profile Image -->
           <div class="relative">
             <div class="w-40 h-40 md:w-52 md:h-52 rounded-full bg-gradient-to-br from-primary to-secondary p-1">
-              <div class="w-full h-full rounded-full bg-surface flex items-center justify-center">
-                <i class="fa-solid fa-user text-6xl md:text-7xl text-primary"></i>
-              </div>
+              <img
+                src="/profile.png"
+                alt={t.about.header.name}
+                class="w-full h-full rounded-full object-cover bg-surface"
+              />
             </div>
-            <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-success rounded-full border-4 border-surface"></div>
           </div>
           
           <!-- Profile Info -->
