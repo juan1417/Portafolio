@@ -1,5 +1,6 @@
 ---
 import Navegation from "../components/Navegation.astro";
+import Footer from "../components/Footer.astro";
 import '../style/style.css';
 import type { Language } from '../i18n/utils';
 
@@ -20,18 +21,23 @@ const { lang = 'en' } = Astro.props;
 		<!-- Google Fonts -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet" />
+		<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet" />
 		<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
 		<!-- Font Awesome -->
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 		<!-- Devicon - Iconos de tecnologías -->
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
 	</head>
-	<body class="bg-background min-h-screen flex flex-col font-['Inter']">
-		<Navegation/>
-		
-			<slot/>
-		
+	<body class="bg-background min-h-screen font-['Fira_Code'] text-text overflow-x-hidden flex items-center justify-center p-0 md:p-8">
+		<div class="flex flex-col w-full h-full min-h-screen md:h-[calc(100vh-4rem)] md:min-h-[600px] max-w-[1440px] bg-surface border-0 md:border md:border-border md:rounded-lg overflow-hidden relative shadow-2xl">
+			<Navegation lang={lang}/>
+			<div class="flex-grow flex flex-col md:flex-row overflow-hidden">
+				<!-- Main Content Area -->
+				<main class="flex-grow overflow-y-auto overflow-x-hidden custom-scrollbar">
+					<slot />
+				</main>
+			</div>
+			<Footer lang={lang}/>
+		</div>
 	</body>
 </html>
-

@@ -5,123 +5,99 @@ interface Props {
   lang?: Language;
 }
 
-const lang = (Astro.url.searchParams.get('lang') || 'en') as Language;
-const t = getTranslations(lang)
+const { lang = 'en' } = Astro.props;
+const t = getTranslations(lang);
+
+const currentPath = Astro.url.pathname;
+const isHome = currentPath === '/' || currentPath === '/index.astro';
+const isProjects = currentPath.includes('/projects');
+const isAbout = currentPath.includes('/about') || currentPath.includes('/skills');
+const isContact = currentPath.includes('/contact');
 ---
 
-<nav class="flex items-center justify-between p-4 bg-surface relative">
-  <div class="flex items-center gap-3">
-    <a href={`/?lang=${lang}`} class="text-text text-lg md:text-xl font-bold hover:text-primary transition-colors">Juan Manuel Machado</a>
+<header class="w-full flex flex-col md:flex-row items-center bg-surface text-text-muted border-b border-border text-sm z-50">
+  <!-- Brand / Sidebar Toggle Area -->
+  <div class="w-full md:w-64 px-6 py-3 border-b md:border-b-0 md:border-r border-border flex justify-between items-center shrink-0">
+    <a href={`/?lang=${lang}`} class="hover:text-text transition-colors font-medium">
+      juan-manuel-machado
+    </a>
+    <button id="menu-toggle" class="md:hidden text-text-muted">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
   </div>
-  
-  <!-- Hamburger Button (Mobile) -->
-  <button 
-    id="menu-toggle" 
-    class="md:hidden flex flex-col gap-1.5 p-2 z-50"
-    aria-label="Toggle menu"
-  >
-    <span class="hamburger-line w-6 h-0.5 bg-text transition-all duration-300"></span>
-    <span class="hamburger-line w-6 h-0.5 bg-text transition-all duration-300"></span>
-    <span class="hamburger-line w-6 h-0.5 bg-text transition-all duration-300"></span>
-  </button>
 
-  <!-- Desktop Menu -->
-  <div class="hidden md:flex items-center gap-6">
-    <ul class="flex gap-6 list-none">
-      <li>
-        <a
-          href={`/?lang=${lang}`}
-          class="text-text-muted hover:text-primary cursor-pointer transition-colors"
-          >{t.nav.home}</a>
-      </li>
-      <li>
-        <a
-          href={`/projects?lang=${lang}`}
-          class="text-text-muted hover:text-primary cursor-pointer transition-colors"
-          >{t.nav.projects}</a>
-      </li>
-      <li>
-        <a
-          href={`/skills?lang=${lang}`}
-          class="text-text-muted hover:text-primary cursor-pointer transition-colors"
-          >{t.nav.skills}</a>
-      </li>
-      <li>
-        <a
-          href={`/about?lang=${lang}`}
-          class="text-text-muted hover:text-primary cursor-pointer transition-colors"
-          >{t.nav.about}</a>
-      </li>
-    </ul>
-    <form class="flex items-center gap-2">
-      <span class="material-symbols-outlined text-text-muted text-xl">language</span>
-      <label for="language-select" class="sr-only">{t.language.select}</label>
+  <!-- Desktop Tabs -->
+  <nav class="hidden md:flex flex-grow items-stretch overflow-x-auto no-scrollbar h-full">
+    <a 
+      href={`/?lang=${lang}`} 
+      class={`px-6 py-3 border-r border-border transition-colors flex items-center gap-4 relative group ${isHome ? 'text-text bg-surface-elevated after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-primary' : 'hover:text-text hover:bg-surface-elevated/50'}`}
+    >
+      <span>{t.nav.home}</span>
+      <span class="material-symbols-outlined text-[14px] opacity-0 group-hover:opacity-100 transition-opacity">close</span>
+    </a>
+    <a 
+      href={`/about?lang=${lang}`} 
+      class={`px-6 py-3 border-r border-border transition-colors flex items-center gap-4 relative group ${isAbout ? 'text-text bg-surface-elevated after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-primary' : 'hover:text-text hover:bg-surface-elevated/50'}`}
+    >
+      <span>{t.nav.about}</span>
+      <span class="material-symbols-outlined text-[14px] opacity-0 group-hover:opacity-100 transition-opacity">close</span>
+    </a>
+    <a 
+      href={`/projects?lang=${lang}`} 
+      class={`px-6 py-3 border-r border-border transition-colors flex items-center gap-4 relative group ${isProjects ? 'text-text bg-surface-elevated after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-primary' : 'hover:text-text hover:bg-surface-elevated/50'}`}
+    >
+      <span>{t.nav.projects}</span>
+      <span class="material-symbols-outlined text-[14px] opacity-0 group-hover:opacity-100 transition-opacity">close</span>
+    </a>
+  </nav>
+
+  <!-- Right side (Contact + Lang) -->
+  <div class="hidden md:flex items-stretch h-full">
+    <a 
+      href={`/contact?lang=${lang}`} 
+      class={`px-6 py-3 border-l border-border transition-colors flex items-center gap-4 relative group ${isContact ? 'text-text bg-surface-elevated after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-primary' : 'hover:text-text hover:bg-surface-elevated/50'}`}
+    >
+      <span>{t.nav.contact}</span>
+      <span class="material-symbols-outlined text-[14px] opacity-0 group-hover:opacity-100 transition-opacity">close</span>
+    </a>
+    <!-- Language Select (Desktop) -->
+    <div class="px-4 py-3 border-l border-border flex items-center justify-center bg-surface">
       <select
         id="language-select"
-        name="language"
-        class="bg-surface-elevated text-text px-3 py-1 rounded border border-primary/20 focus:outline-none focus:border-primary cursor-pointer font-['Inter']"
-        aria-label={t.language.select}
+        class="bg-transparent text-text-muted focus:outline-none cursor-pointer hover:text-text transition-colors font-mono text-xs"
       >
-        <option value="en" selected={lang === 'en'}>English</option>
-        <option value="es" selected={lang === 'es'}>Español</option>
+        <option value="en" class="bg-surface" selected={lang === 'en'}>EN</option>
+        <option value="es" class="bg-surface" selected={lang === 'es'}>ES</option>
       </select>
-    </form>
-    <a href={`/about?lang=${lang}#contact`} class="bg-primary text-text px-4 py-2 rounded-full font-semibold text-sm hover:opacity-90 hover:scale-105 transition-all whitespace-nowrap">{t.nav.hire}</a>
+    </div>
   </div>
 
-  <!-- Mobile Menu -->
-  <div id="mobile-menu" class="fixed inset-0 bg-background/95 backdrop-blur-sm z-40 flex flex-col items-center justify-center gap-8 transform translate-x-full transition-transform duration-300 md:hidden">
-    <ul class="flex flex-col gap-6 list-none text-center">
-      <li>
-        <a
-          href={`/?lang=${lang}`}
-          class="text-text text-2xl font-medium hover:text-primary cursor-pointer transition-colors"
-          >{t.nav.home}</a>
-      </li>
-      <li>
-        <a
-          href={`/projects?lang=${lang}`}
-          class="text-text text-2xl font-medium hover:text-primary cursor-pointer transition-colors"
-          >{t.nav.projects}</a>
-      </li>
-      <li>
-        <a
-          href={`/skills?lang=${lang}`}
-          class="text-text text-2xl font-medium hover:text-primary cursor-pointer transition-colors"
-          >{t.nav.skills}</a>
-      </li>
-      <li>
-        <a
-          href={`/about?lang=${lang}`}
-          class="text-text text-2xl font-medium hover:text-primary cursor-pointer transition-colors"
-          >{t.nav.about}</a>
-      </li>
-    </ul>
-    <form class="flex items-center gap-2">
-      <span class="material-symbols-outlined text-text-muted text-xl">language</span>
+  <!-- Mobile Nav -->
+  <nav id="mobile-nav" class="hidden w-full flex-col md:hidden bg-surface border-t border-border">
+    <a href={`/?lang=${lang}`} class={`px-6 py-4 border-b border-border ${isHome ? 'text-text bg-surface-elevated' : 'text-text-muted'}`}>{t.nav.home}</a>
+    <a href={`/about?lang=${lang}`} class={`px-6 py-4 border-b border-border ${isAbout ? 'text-text bg-surface-elevated' : 'text-text-muted'}`}>{t.nav.about}</a>
+    <a href={`/projects?lang=${lang}`} class={`px-6 py-4 border-b border-border ${isProjects ? 'text-text bg-surface-elevated' : 'text-text-muted'}`}>{t.nav.projects}</a>
+    <a href={`/contact?lang=${lang}`} class={`px-6 py-4 border-b border-border ${isContact ? 'text-text bg-surface-elevated' : 'text-text-muted'}`}>{t.nav.contact}</a>
+    <div class="px-6 py-4 flex items-center justify-between">
+      <span class="text-text-muted text-xs font-mono">{t.language.select}</span>
       <select
         id="language-select-mobile"
-        name="language"
-        class="bg-surface-elevated text-text px-4 py-2 rounded border border-primary/20 focus:outline-none focus:border-primary cursor-pointer font-['Inter']"
-        aria-label={t.language.select}
+        class="bg-surface-elevated text-text px-2 py-1 rounded border border-border focus:outline-none text-xs"
       >
-        <option value="en" selected={lang === 'en'}>English</option>
-        <option value="es" selected={lang === 'es'}>Español</option>
+        <option value="en" selected={lang === 'en'}>EN</option>
+        <option value="es" selected={lang === 'es'}>ES</option>
       </select>
-    </form>
-    <a href={`/about?lang=${lang}#contact`} class="bg-primary text-text px-6 py-3 rounded-full font-semibold hover:opacity-90 transition-all">{t.nav.hire}</a>
-  </div>
-</nav>
+    </div>
+  </nav>
+</header>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const select = document.getElementById('language-select') as HTMLSelectElement
     const selectMobile = document.getElementById('language-select-mobile') as HTMLSelectElement
     const menuToggle = document.getElementById('menu-toggle')
-    const mobileMenu = document.getElementById('mobile-menu')
-    const currentLang = new URLSearchParams(window.location.search).get('lang') || 'en'
+    const mobileNav = document.getElementById('mobile-nav')
     
-    // Language select handlers
     const handleLangChange = (e: Event) => {
       const newLang = (e.target as HTMLSelectElement).value
       const url = new URL(window.location.href)
@@ -129,54 +105,13 @@ const t = getTranslations(lang)
       window.location.href = url.toString()
     }
     
-    if (select) {
-      select.value = currentLang
-      select.addEventListener('change', handleLangChange)
-    }
-    
-    if (selectMobile) {
-      selectMobile.value = currentLang
-      selectMobile.addEventListener('change', handleLangChange)
-    }
+    if (select) select.addEventListener('change', handleLangChange)
+    if (selectMobile) selectMobile.addEventListener('change', handleLangChange)
 
-    // Mobile menu toggle
-    if (menuToggle && mobileMenu) {
+    if (menuToggle && mobileNav) {
       menuToggle.addEventListener('click', () => {
-        const isOpen = !mobileMenu.classList.contains('translate-x-full')
-        
-        if (isOpen) {
-          mobileMenu.classList.add('translate-x-full')
-          mobileMenu.classList.remove('translate-x-0')
-          document.body.style.overflow = ''
-        } else {
-          mobileMenu.classList.remove('translate-x-full')
-          mobileMenu.classList.add('translate-x-0')
-          document.body.style.overflow = 'hidden'
-        }
-        
-        // Animate hamburger
-        const lines = menuToggle.querySelectorAll('.hamburger-line')
-        lines.forEach((line, index) => {
-          if (!isOpen) {
-            if (index === 0) line.classList.add('rotate-45', 'translate-y-2')
-            if (index === 1) line.classList.add('opacity-0')
-            if (index === 2) line.classList.add('-rotate-45', '-translate-y-2')
-          } else {
-            line.classList.remove('rotate-45', 'translate-y-2', 'opacity-0', '-rotate-45', '-translate-y-2')
-          }
-        })
-      })
-
-      // Close menu when clicking a link
-      mobileMenu.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-          mobileMenu.classList.add('translate-x-full')
-          mobileMenu.classList.remove('translate-x-0')
-          document.body.style.overflow = ''
-        })
+        mobileNav.classList.toggle('hidden')
       })
     }
   })
 </script>
-
-<style></style>

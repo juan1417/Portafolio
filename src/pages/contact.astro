@@ -1,0 +1,172 @@
+---
+import Base from "../layout/base.astro";
+import { getTranslations, type Language } from "../i18n/utils";
+
+const lang = (Astro.url.searchParams.get("lang") || "en") as Language;
+const t = getTranslations(lang);
+---
+
+<Base lang={lang}>
+  <main class="flex-grow flex overflow-hidden h-full">
+    <!-- Left Sidebar (Explorer) -->
+    <aside class="w-64 border-r border-border hidden md:flex flex-col bg-surface shrink-0">
+      <div class="px-4 py-2 text-text-muted text-[11px] uppercase tracking-wider font-bold flex items-center justify-between border-b border-border">
+        <span>contacts</span>
+        <i class="fa-solid fa-address-book text-[10px]"></i>
+      </div>
+      
+      <div class="py-4 space-y-4">
+        <div>
+          <button class="folder-toggle w-full flex items-center gap-2 px-4 py-2 text-text text-sm hover:bg-surface-elevated transition-colors group font-mono" data-target="contact-details">
+            <i class="fa-solid fa-caret-down text-[10px] transition-transform duration-200"></i>
+            contacts
+          </button>
+          <div class="pl-4 pb-2 space-y-2 pt-2" id="contact-details">
+            <a href="mailto:jmachadoact@gmail.com" class="flex items-center gap-2 px-4 py-1 text-text-muted text-[13px] hover:text-text transition-colors font-mono">
+              <i class="fa-solid fa-envelope text-xs"></i>
+              email
+            </a>
+            <p class="flex items-center gap-2 px-4 py-1 text-text-muted text-[13px] font-mono">
+              <i class="fa-solid fa-phone text-xs"></i>
+              +57 322 619 1781
+            </p>
+          </div>
+        </div>
+
+        <div class="border-t border-border pt-4">
+          <button class="folder-toggle w-full flex items-center gap-2 px-4 py-2 text-text text-sm hover:bg-surface-elevated transition-colors group font-mono" data-target="social-links">
+            <i class="fa-solid fa-caret-down text-[10px] transition-transform duration-200"></i>
+            find-me-also-in
+          </button>
+          <div class="pl-4 pb-2 space-y-2 pt-2" id="social-links">
+            <a href="https://www.linkedin.com/in/juanmachado1234" target="_blank" class="flex items-center gap-2 px-4 py-1 text-text-muted text-[13px] hover:text-text transition-colors font-mono">
+              <i class="fa-solid fa-up-right-from-square text-[10px]"></i>
+              LinkedIn
+            </a>
+            <a href="https://github.com/juan1417" target="_blank" class="flex items-center gap-2 px-4 py-1 text-text-muted text-[13px] hover:text-text transition-colors font-mono">
+              <i class="fa-solid fa-up-right-from-square text-[10px]"></i>
+              GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Editor Area -->
+    <div class="flex-grow flex flex-col bg-surface overflow-hidden">
+      <!-- Editor Tabs -->
+      <div class="flex border-b border-border overflow-x-auto bg-surface shrink-0 no-scrollbar h-10">
+        <div class="px-6 py-2 border-r border-border text-text text-sm flex items-center gap-4 bg-surface-elevated min-w-fit border-t-2 border-t-primary">
+          <i class="fa-solid fa-envelope text-accent text-xs"></i>
+          <span class="font-mono">contact.md</span>
+          <i class="fa-solid fa-xmark text-text-muted hover:text-text cursor-pointer text-xs"></i>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="flex-grow flex flex-col lg:flex-row overflow-hidden h-full">
+        <!-- Form Section -->
+        <div class="flex-grow p-6 md:p-12 overflow-y-auto border-r border-border flex items-center justify-center custom-scrollbar">
+          <form class="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div class="space-y-3">
+              <label for="name" class="text-text-muted text-sm font-mono tracking-tight">_name:</label>
+              <input 
+                type="text" 
+                id="name" 
+                class="w-full bg-background/50 border border-border rounded-lg px-4 py-3 text-text-muted focus:border-text-muted focus:text-text outline-none transition-all font-mono text-sm shadow-inner"
+                placeholder="Juan Manuel"
+              />
+            </div>
+            <div class="space-y-3">
+              <label for="email" class="text-text-muted text-sm font-mono tracking-tight">_email:</label>
+              <input 
+                type="email" 
+                id="email" 
+                class="w-full bg-background/50 border border-border rounded-lg px-4 py-3 text-text-muted focus:border-text-muted focus:text-text outline-none transition-all font-mono text-sm shadow-inner"
+                placeholder="juan@example.com"
+              />
+            </div>
+            <div class="space-y-3">
+              <label for="message" class="text-text-muted text-sm font-mono tracking-tight">_message:</label>
+              <textarea 
+                id="message" 
+                rows="4"
+                class="w-full bg-background/50 border border-border rounded-lg px-4 py-3 text-text-muted focus:border-text-muted focus:text-text outline-none transition-all resize-none font-mono text-sm shadow-inner"
+                placeholder="Your message here..."
+              ></textarea>
+            </div>
+            <button class="px-6 py-2.5 bg-surface-elevated text-text border border-border rounded-lg text-sm hover:bg-background hover:border-secondary transition-all font-mono active:scale-95">
+              submit-message
+            </button>
+          </form>
+        </div>
+
+        <!-- Code Representation (Right Side) -->
+        <div class="w-full lg:w-1/2 p-12 bg-surface overflow-y-auto hidden lg:block border-l border-border custom-scrollbar">
+          <div class="flex gap-8 font-mono text-[13px] leading-relaxed">
+            <div class="text-text-muted text-right select-none space-y-1 min-w-[2rem] pt-1">
+              {Array.from({ length: 15 }).map((_, i) => (
+                <p>{i + 1}</p>
+              ))}
+            </div>
+            <div class="space-y-1 pt-1">
+              <p><span class="text-rose">const</span> <span class="text-secondary">button</span> = <span class="text-secondary">document</span>.<span class="text-secondary">querySelector</span>(<span class="text-accent">'#sendBtn'</span>);</p>
+              <p>&nbsp;</p>
+              <p><span class="text-rose">const</span> <span class="text-secondary">message</span> = &#123;</p>
+              <p>&nbsp;&nbsp;<span class="text-secondary">name</span>: <span class="text-accent">'</span><span class="text-accent" id="code-name"></span><span class="text-accent">'</span>,</p>
+              <p>&nbsp;&nbsp;<span class="text-secondary">email</span>: <span class="text-accent">'</span><span class="text-accent" id="code-email"></span><span class="text-accent">'</span>,</p>
+              <p>&nbsp;&nbsp;<span class="text-secondary">message</span>: <span class="text-accent">'</span><span class="text-accent" id="code-message"></span><span class="text-accent">'</span>,</p>
+              <p>&nbsp;&nbsp;<span class="text-secondary">date</span>: <span class="text-accent">'{new Date().toDateString()}'</span></p>
+              <p>&#125;;</p>
+              <p>&nbsp;</p>
+              <p><span class="text-secondary">button</span>.<span class="text-secondary">addEventListener</span>(<span class="text-accent">'click'</span>, () =&gt; &#123;</p>
+              <p>&nbsp;&nbsp;<span class="text-secondary">form</span>.<span class="text-secondary">send</span>(<span class="text-secondary">message</span>);</p>
+              <p>&#125;);</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const nameInput = document.getElementById('name') as HTMLInputElement
+      const emailInput = document.getElementById('email') as HTMLInputElement
+      const messageInput = document.getElementById('message') as HTMLTextAreaElement
+      const folderToggles = document.querySelectorAll('.folder-toggle');
+
+      const codeName = document.getElementById('code-name')
+      const codeEmail = document.getElementById('code-email')
+      const codeMessage = document.getElementById('code-message')
+
+      folderToggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+          const targetId = toggle.getAttribute('data-target');
+          if (!targetId) return;
+          const target = document.getElementById(targetId);
+          const icon = toggle.querySelector('i');
+          if (target) {
+            target.classList.toggle('hidden');
+          }
+          if (icon) {
+            icon.classList.toggle('rotate-[-90deg]');
+          }
+        });
+      });
+
+      const updateCode = () => {
+        if (codeName) codeName.textContent = nameInput.value
+        if (codeEmail) codeEmail.textContent = emailInput.value
+        if (codeMessage) codeMessage.textContent = messageInput.value
+      }
+
+      nameInput?.addEventListener('input', updateCode)
+      emailInput?.addEventListener('input', updateCode)
+      messageInput?.addEventListener('input', updateCode)
+      
+      // Initialize code preview
+      updateCode()
+    })
+  </script>
+</Base>

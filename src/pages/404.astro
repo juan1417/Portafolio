@@ -1,0 +1,15 @@
+---
+import Base from "../layout/base.astro";
+import { getTranslations, type Language } from "../i18n/utils";
+
+const lang = (Astro.url.searchParams.get('lang') || 'en') as Language;
+const t = getTranslations(lang);
+---
+
+<Base lang={lang}>
+  <main class="flex-grow flex flex-col items-center justify-center p-8 bg-surface text-text">
+    <h1 class="text-6xl font-bold text-primary">{t.error404.title}</h1>
+    <p class="mt-4 text-lg">{t.error404.message}</p>
+    <a href={`/?lang=${lang}`} class="mt-6 px-6 py-2 bg-primary text-background rounded hover:bg-primary/80 transition-colors">{t.error404.back}</a>
+  </main>
+</Base>

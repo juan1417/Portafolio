@@ -1,10 +1,9 @@
 {
   "nav": {
-    "home": "Inicio",
-    "projects": "Proyectos",
-    "skills": "Habilidades y Tecnologías",
-    "about": "Acerca de/Contacto",
-    "hire": "Contrátame"
+    "home": "_hola",
+    "projects": "_proyectos",
+    "about": "_sobre-mí",
+    "contact": "_contáctame"
   },
   "home": {
     "title": "Desarrollador de Software",
@@ -145,5 +144,10 @@
   },
   "footer": {
     "rights": "Todos los derechos reservados."
+  },
+  "error404": {
+    "title": "Página no encontrada",
+    "message": "Lo sentimos, la página que buscas no existe.",
+    "back": "Ir al inicio"
   }
 }

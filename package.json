@@ -1,7 +1,7 @@
 {
-  "name": "",
+  "name": "PORTAFOLIO",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "packageManager": "pnpm@10.33.0",
   "scripts": {
     "dev": "astro dev",
@@ -10,11 +10,11 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.7",
-    "@astrojs/vercel": "^10.0.4",
-    "@tailwindcss/vite": "^4.1.18",
-    "astro": "^5.16.0",
-    "tailwindcss": "^4.1.18",
+    "@astrojs/check": "^0.9.9",
+    "@astrojs/vercel": "^9.0.5",
+    "@tailwindcss/vite": "^4.2.4",
+    "astro": "^5.18.1",
+    "tailwindcss": "^4.2.4",
     "typescript": "^5.9.3"
   }
 }

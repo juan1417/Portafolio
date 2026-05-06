@@ -1,10 +1,9 @@
 {
   "nav": {
-    "home": "Home",
-    "projects": "Projects",
-    "skills": "Skills & Technologies",
-    "about": "About/Contact",
-    "hire": "Hire Me"
+    "home": "_hello",
+    "projects": "_projects",
+    "about": "_about-me",
+    "contact": "_contact-me"
   },
   "home": {
     "title": "Software Developer",
@@ -136,5 +135,10 @@
   },
   "footer": {
     "rights": "All rights reserved."
+  },
+  "error404": {
+    "title": "Page not found",
+    "message": "Sorry, the page you are looking for does not exist.",
+    "back": "Go home"
   }
 }

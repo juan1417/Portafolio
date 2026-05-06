@@ -1,181 +1,279 @@
 ---
 import Base from "../layout/base.astro";
-import { getTranslations, type Language } from "../i18n/utils";
-import Footer from "../components/Footer.astro";
+import { type Language } from "../i18n/utils"
+import Bio from "../content/about/bio.md"
+import Interests from "../content/about/interests.md"
+import Education from "../content/about/education.md"
+import Experience from "../content/about/experience.md"
+import Skills from "../content/about/skill.md"
+
 const lang = (Astro.url.searchParams.get("lang") || "en") as Language;
-const t = getTranslations(lang);
-const cvPath = lang === "es" ? "docs/Desarrollador de Software.pdf" : "docs/Software Developer.pdf";
-const cvFileName = lang === "es" ? "Desarrollador de Software.pdf" : "Software Developer.pdf";
 ---
 
-<Base>
-  <main class="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-6xl mx-auto space-y-16">
+<Base lang={lang}>
+  <main class="flex-grow flex overflow-hidden h-full">
+    <!-- Far Left Icon Strip -->
+    <div class="w-12 border-r border-border flex flex-col items-center py-6 gap-8 bg-surface text-text-muted hidden md:flex shrink-0">
+      <i class="fa-solid fa-files text-xl hover:text-text cursor-pointer transition-colors text-text"></i>
+      <i class="fa-solid fa-circle-user text-xl hover:text-text cursor-pointer transition-colors"></i>
+      <i class="fa-solid fa-code-merge text-xl hover:text-text cursor-pointer transition-colors"></i>
+    </div>
+
+    <!-- Left Sidebar (Explorer) -->
+    <aside class="w-64 border-r border-border hidden md:flex flex-col bg-surface shrink-0">
+      <div class="px-4 py-2 text-text-muted text-[11px] uppercase tracking-wider font-bold flex items-center justify-between border-b border-border">
+        <span>explorer</span>
+        <i class="fa-solid fa-ellipsis"></i>
+      </div>
       
-      <!-- Header Section - Profile Card -->
-      <section id="contact" class="bg-surface rounded-2xl p-8 md:p-12 border border-surface-elevated">
-        <div class="flex flex-col md:flex-row items-center gap-8">
-          <!-- Profile Image -->
-          <div class="relative">
-            <div class="w-40 h-40 md:w-52 md:h-52 rounded-full bg-gradient-to-br from-primary to-secondary p-1">
-              <img
-                src="/profile.png"
-                alt={t.about.header.name}
-                class="w-full h-full rounded-full object-cover bg-surface"
-              />
+      <!-- Personal Info Section -->
+      <div class="border-b border-border">
+        <button class="folder-toggle w-full flex items-center gap-2 px-4 py-2 text-text text-sm hover:bg-surface-elevated transition-colors group font-mono" data-target="personal-info-files">
+          <i class="fa-solid fa-caret-down text-[10px] transition-transform duration-200"></i>
+          personal-info
+        </button>
+        <div class="pb-2 space-y-0.5" id="personal-info-files">
+          <button data-file="bio" class="file-btn w-full flex items-center gap-2 px-8 py-1 text-text-muted text-sm hover:text-text hover:bg-surface-elevated transition-colors text-left">
+            <i class="fa-solid fa-file-code text-rose text-xs"></i>
+            bio.md
+          </button>
+          <button data-file="interests" class="file-btn w-full flex items-center gap-2 px-8 py-1 text-text-muted text-sm hover:text-text hover:bg-surface-elevated transition-colors text-left">
+            <i class="fa-solid fa-file-code text-secondary text-xs"></i>
+            interests.md
+          </button>
+          <button data-file="education" class="file-btn w-full flex items-center gap-2 px-8 py-1 text-text-muted text-sm hover:text-text hover:bg-surface-elevated transition-colors text-left">
+            <i class="fa-solid fa-file-code text-indigo text-xs"></i>
+            education.md
+          </button>
+          <button data-file="experience" class="file-btn w-full flex items-center gap-2 px-8 py-1 text-text-muted text-sm hover:text-text hover:bg-surface-elevated transition-colors text-left">
+            <i class="fa-solid fa-file-code text-primary text-xs"></i>
+            experience.md
+          </button>
+          <button data-file="skills" class="file-btn w-full flex items-center gap-2 px-8 py-1 text-text-muted text-sm hover:text-text hover:bg-surface-elevated transition-colors text-left">
+            <i class="fa-solid fa-file-code text-accent text-xs"></i>
+            skills.md
+          </button>
+        </div>
+      </div>
+
+      <!-- Contacts Section -->
+      <div>
+        <button class="folder-toggle w-full flex items-center gap-2 px-4 py-2 text-text text-sm hover:bg-surface-elevated transition-colors group font-mono" data-target="contacts-files">
+          <i class="fa-solid fa-caret-down text-[10px] transition-transform duration-200"></i>
+          contacts
+        </button>
+        <div class="pb-2 space-y-0.5" id="contacts-files">
+          <a href="mailto:jmachadoact@gmail.com" class="w-full flex items-center gap-2 px-8 py-1 text-text-muted text-[13px] hover:text-text transition-colors">
+            <i class="fa-solid fa-envelope text-xs"></i>
+            email
+          </a>
+          <p class="w-full flex items-center gap-2 px-8 py-1 text-text-muted text-[13px]">
+            <i class="fa-solid fa-phone text-xs"></i>
+            +57 322 619 1781
+          </p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Editor Area -->
+    <div class="flex-grow flex flex-col bg-surface overflow-hidden">
+      <!-- Editor Tabs -->
+      <div class="flex border-b border-border overflow-x-auto bg-surface shrink-0 no-scrollbar h-10">
+        <div id="active-tab" class="px-6 py-2 border-r border-border text-text text-sm flex items-center gap-4 bg-surface-elevated min-w-fit border-t-2 border-t-primary">
+          <i class="fa-solid fa-file-code text-rose text-xs"></i>
+          <span id="tab-name" class="font-mono">bio.md</span>
+          <i class="fa-solid fa-xmark text-text-muted hover:text-text cursor-pointer text-xs"></i>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="flex-grow flex flex-col lg:flex-row overflow-hidden h-full">
+        <!-- Text Content -->
+        <div class="flex-grow p-4 md:p-8 overflow-y-auto border-r border-border custom-scrollbar">
+          <div class="flex gap-8">
+            <div class="text-text-muted text-right select-none space-y-0.5 hidden sm:block min-w-[2.5rem] font-mono text-sm pt-1">
+              {Array.from({ length: 100 }).map((_, i) => (
+                <p>{i + 1}</p>
+              ))}
             </div>
-          </div>
-          
-          <!-- Profile Info -->
-          <div class="text-center md:text-left flex-1">
-            <h1 class="text-3xl md:text-4xl font-bold text-text mb-2">{t.about.header.name}</h1>
-            <p class="text-xl text-primary font-medium mb-4">{t.about.header.job}</p>
-            <p class="text-text-muted max-w-xl mb-6">{t.about.header.paragraph}</p>
-            <a 
-              href={cvPath}
-              download={cvFileName}
-              class="inline-flex items-center gap-2 bg-primary hover:bg-primary/80 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:scale-105"
-            >
-              <i class="fa-solid fa-download"></i>
-              {t.about.header.cv}
-            </a>
+            <div class="text-text-muted space-y-1 w-full font-mono text-sm pt-1">
+              <p class="mb-4">/**</p>
+              <div id="editor-content" class="text-text-muted space-y-4 pl-4 border-l border-border/20">
+                <div data-content="bio" class="content-section prose prose-invert max-w-none">
+                  <Bio />
+                </div>
+                <div data-content="interests" class="content-section hidden prose prose-invert max-w-none">
+                  <Interests />
+                </div>
+                <div data-content="education" class="content-section hidden prose prose-invert max-w-none">
+                  <Education />
+                </div>
+                <div data-content="experience" class="content-section hidden prose prose-invert max-w-none">
+                  <Experience />
+                </div>
+                <div data-content="skills" class="content-section hidden prose prose-invert max-w-none">
+                  <Skills />
+                </div>
+              </div>
+              <p class="mt-4 pl-4">*/</p>
+            </div>
           </div>
         </div>
-      </section>
 
-      <!-- Journey Section - About Me & Experience -->
-      <section class="grid md:grid-cols-2 gap-8">
-        <!-- About Me -->
-        <div class="bg-surface rounded-2xl p-8 border border-surface-elevated">
-          <div class="flex items-center gap-3 mb-6">
-            <div class="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center">
-              <i class="fa-solid fa-user-pen text-primary"></i>
-            </div>
-            <h2 class="text-2xl font-bold text-text">{t.about.journey.title}</h2>
+        <!-- Code Snippet Showcase (Right Side) -->
+        <div class="w-full lg:w-1/2 p-8 bg-surface overflow-y-auto hidden lg:block custom-scrollbar border-l border-border">
+          <div class="flex items-center justify-between mb-8">
+            <p class="text-text text-sm font-mono">// Code snippet showcase:</p>
           </div>
-          <p class="text-text-muted leading-relaxed">{t.about.journey.about}</p>
-        </div>
-
-        <!-- Work Experience -->
-        <div class="bg-surface rounded-2xl p-8 border border-surface-elevated">
-          <div class="flex items-center gap-3 mb-6">
-            <div class="w-10 h-10 bg-secondary/20 rounded-lg flex items-center justify-center">
-              <i class="fa-solid fa-briefcase text-secondary"></i>
-            </div>
-            <h2 class="text-2xl font-bold text-text">{t.about.journey.subtitle}</h2>
-          </div>
-          
-          <!-- Experience Item -->
-          <div class="relative pl-6 border-l-2 border-primary/30">
-            <div class="absolute -left-[9px] top-0 w-4 h-4 bg-primary rounded-full"></div>
-            <div class="bg-surface-elevated rounded-lg p-4">
-              <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
-                <h3 class="text-lg font-semibold text-text">{t.about.journey.experience.SysBlue.name}</h3>
-                <span class="text-sm text-primary bg-primary/10 px-3 py-1 rounded-full">
-                  {t.about.journey.experience.SysBlue.date}
-                </span>
+          <div class="space-y-10">
+            <!-- Snippet 1 -->
+            <div class="space-y-4 group">
+              <div class="flex items-center justify-between px-2">
+                <div class="flex items-center gap-3">
+                  <img src="https://github.com/juan1417.png" class="w-10 h-10 rounded-full border border-border" alt="Avatar"/>
+                  <div class="text-xs font-mono">
+                    <p class="text-indigo font-bold hover:underline cursor-pointer">@juan1417</p>
+                    <p class="text-text-muted">Created 2 months ago</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-4 text-text-muted text-[11px] font-mono">
+                  <span class="flex items-center gap-1 cursor-pointer hover:text-text transition-colors">
+                    <i class="fa-solid fa-message"></i> details
+                  </span>
+                  <span class="flex items-center gap-1 cursor-pointer hover:text-text transition-colors">
+                    <i class="fa-solid fa-star"></i> 3 stars
+                  </span>
+                </div>
               </div>
-              <p class="text-text-muted text-sm">{t.about.journey.experience.SysBlue.description}</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Contact Section -->
-      <section class="bg-surface rounded-2xl p-8 md:p-12 border border-surface-elevated">
-        <div class="text-center mb-10">
-          <h2 class="text-3xl font-bold text-text mb-3">{t.about.mgs.title}</h2>
-          <p class="text-text-muted max-w-xl mx-auto">{t.about.mgs.description}</p>
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-10">
-          <!-- Contact Info -->
-          <div class="space-y-6">
-            <h3 class="text-xl font-semibold text-text mb-4">Info</h3>
-            
-            <!-- Email -->
-            <a href={`mailto:${t.about.mgs.contact.email}`} class="flex items-center gap-4 group">
-              <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center group-hover:bg-primary/30 transition-colors">
-                <i class="fa-solid fa-envelope text-primary text-xl"></i>
-              </div>
-              <div>
-                <p class="text-text-muted text-sm">Email</p>
-                <p class="text-text group-hover:text-primary transition-colors">{t.about.mgs.contact.email}</p>
-              </div>
-            </a>
-
-            <!-- Location -->
-            <div class="flex items-center gap-4">
-              <div class="w-12 h-12 bg-secondary/20 rounded-lg flex items-center justify-center">
-                <i class="fa-solid fa-location-dot text-secondary text-xl"></i>
-              </div>
-              <div>
-                <p class="text-text-muted text-sm">Location</p>
-                <p class="text-text">{t.about.mgs.contact.location}</p>
+              <div class="bg-background/50 border border-border rounded-xl p-6 relative overflow-hidden group-hover:border-text-muted transition-colors">
+                <pre class="text-[13px] text-text-muted font-mono leading-relaxed overflow-x-auto no-scrollbar"><code><span class="text-rose">function</span> <span class="text-secondary">parseModelTuple</span>(
+  response: <span class="text-accent">Response</span>,
+  value: &#123; [key: <span class="text-accent">string</span>]: <span class="text-accent">any</span> &#125;
+) &#123;
+  <span class="text-indigo">const</span> <span class="text-text">tuple</span> = [mixed, mixed];
+  <span class="text-rose">return</span> <span class="text-text">tuple</span>;
+&#125;</code></pre>
               </div>
             </div>
 
-            <!-- Social Links -->
-            <div class="pt-4">
-              <p class="text-text-muted text-sm mb-3">Social</p>
-              <div class="flex gap-3">
-                <a href="https://github.com/juan1417" target="_blank" class="w-12 h-12 bg-surface-elevated hover:bg-primary/20 rounded-lg flex items-center justify-center transition-colors group">
-                  <i class="fa-brands fa-github text-text-muted group-hover:text-primary text-2xl transition-colors"></i>
-                </a>
-                <a href="https://www.linkedin.com/in/juanmachado1234" target="_blank" class="w-12 h-12 bg-surface-elevated hover:bg-secondary/20 rounded-lg flex items-center justify-center transition-colors group">
-                  <i class="fa-brands fa-linkedin text-text-muted group-hover:text-secondary text-2xl transition-colors"></i>
-                </a>
+            <!-- Snippet 2 -->
+            <div class="space-y-4 group">
+              <div class="flex items-center justify-between px-2">
+                <div class="flex items-center gap-3">
+                   <img src="https://github.com/juan1417.png" class="w-10 h-10 rounded-full border border-border" alt="Avatar"/>
+                  <div class="text-xs font-mono">
+                    <p class="text-indigo font-bold hover:underline cursor-pointer">@juan1417</p>
+                    <p class="text-text-muted">Created 5 months ago</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-4 text-text-muted text-[11px] font-mono">
+                  <span class="flex items-center gap-1 cursor-pointer hover:text-text transition-colors">
+                    <i class="fa-solid fa-message"></i> details
+                  </span>
+                  <span class="flex items-center gap-1 cursor-pointer hover:text-text transition-colors">
+                    <i class="fa-solid fa-star"></i> 12 stars
+                  </span>
+                </div>
+              </div>
+              <div class="bg-background/50 border border-border rounded-xl p-6 relative overflow-hidden group-hover:border-text-muted transition-colors">
+                <pre class="text-[13px] text-text-muted font-mono leading-relaxed overflow-x-auto no-scrollbar"><code><span class="text-indigo">export const</span> <span class="text-secondary">useSnakeGame</span> = () => &#123;
+  <span class="text-indigo">const</span> [snake, setSnake] = useState([[0,0]]);
+  <span class="text-rose">return</span> &#123; snake, setSnake &#125;;
+&#125;</code></pre>
               </div>
             </div>
           </div>
-
-          <!-- Contact Form -->
-          <form action="" method="post" class="space-y-5">
-            <div>
-              <label for="name" class="block text-text-muted text-sm mb-2">{t.about.mgs.input.name}</label>
-              <input 
-                type="text" 
-                id="name" 
-                name="name"
-                class="w-full bg-surface-elevated border border-surface-elevated focus:border-primary rounded-lg px-4 py-3 text-text placeholder-text-muted/50 outline-none transition-colors"
-                placeholder={t.about.mgs.input.name}
-              />
-            </div>
-            
-            <div>
-              <label for="email" class="block text-text-muted text-sm mb-2">{t.about.mgs.input.email}</label>
-              <input 
-                type="email" 
-                id="email" 
-                name="email"
-                class="w-full bg-surface-elevated border border-surface-elevated focus:border-primary rounded-lg px-4 py-3 text-text placeholder-text-muted/50 outline-none transition-colors"
-                placeholder={t.about.mgs.input.email}
-              />
-            </div>
-            
-            <div>
-              <label for="message" class="block text-text-muted text-sm mb-2">{t.about.mgs.input.msg}</label>
-              <textarea 
-                id="message" 
-                name="message"
-                rows="4"
-                class="w-full bg-surface-elevated border border-surface-elevated focus:border-primary rounded-lg px-4 py-3 text-text placeholder-text-muted/50 outline-none transition-colors resize-none"
-                placeholder={t.about.mgs.input.msg}
-              ></textarea>
-            </div>
-            
-            <button 
-              type="submit"
-              class="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 hover:scale-[1.02] flex items-center justify-center gap-2"
-            >
-              <i class="fa-solid fa-paper-plane"></i>
-              {t.about.mgs.input.summit}
-            </button>
-          </form>
         </div>
-      </section>
-
+      </div>
     </div>
   </main>
-<Footer/>
 </Base>
+
+<style>
+  .content-section :global(h1), 
+  .content-section :global(h2), 
+  .content-section :global(h3) {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    margin-top: 2rem;
+    color: var(--color-text);
+  }
+  .content-section :global(p) {
+    margin-bottom: 1rem;
+    color: var(--color-text-muted);
+  }
+  .content-section :global(ul) {
+    list-style-type: none;
+    padding-left: 0;
+    margin-bottom: 1rem;
+  }
+  .content-section :global(li) {
+    margin-bottom: 0.5rem;
+    color: var(--color-text-muted);
+  }
+  .content-section :global(li)::before {
+    content: "* ";
+    color: var(--color-text-muted);
+    opacity: 0.5;
+  }
+  .content-section :global(strong) {
+    color: var(--color-secondary);
+    font-weight: 600;
+  }
+  
+  .file-btn.active {
+    background-color: var(--color-surface-elevated);
+    color: var(--color-text);
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const fileBtns = document.querySelectorAll('.file-btn');
+    const contentSections = document.querySelectorAll('.content-section');
+    const tabName = document.getElementById('tab-name');
+    const folderToggles = document.querySelectorAll('.folder-toggle');
+
+    // Set initial active state
+    const firstBtn = document.querySelector('.file-btn[data-file="bio"]');
+    if (firstBtn) firstBtn.classList.add('active');
+
+    folderToggles.forEach(toggle => {
+      toggle.addEventListener('click', () => {
+        const targetId = toggle.getAttribute('data-target');
+        if (!targetId) return;
+        const target = document.getElementById(targetId);
+        const icon = toggle.querySelector('i');
+        if (target) {
+          target.classList.toggle('hidden');
+        }
+        if (icon) {
+          icon.classList.toggle('rotate-[-90deg]');
+        }
+      });
+    });
+
+    fileBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const file = btn.getAttribute('data-file');
+        
+        // Update active button
+        fileBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Update tab name
+        if (tabName) tabName.textContent = file + '.md';
+
+        // Switch content
+        contentSections.forEach(section => {
+          if (section.getAttribute('data-content') === file) {
+            section.classList.remove('hidden');
+          } else {
+            section.classList.add('hidden');
+          }
+        });
+      });
+    });
+  });
+</script>
