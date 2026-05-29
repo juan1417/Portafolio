@@ -99,8 +99,14 @@ const { lang = 'en' } = Astro.props;
     const overlay = document.getElementById('game-overlay')!;
     const winOverlay = document.getElementById('win-overlay')!;
     const btnWinAgain = document.getElementById('win-play-again')!;
+    // Missing element references added
+    const btnStart = document.getElementById('start-game')!;
+    const btnAgain = document.getElementById('play-again')!;
+    const btnSkip = document.getElementById('skip-game')!;
+    const foodDotsContainer = document.getElementById('food-dots')!;
+    const gameOverOverlay = document.getElementById('game-over-overlay')!;
 
-    // Make buttons read to avoid unused warnings
+    // Make buttons ready
     if (!btnStart || !btnAgain || !btnSkip || !btnWinAgain) return;
 
     // Game Configuration

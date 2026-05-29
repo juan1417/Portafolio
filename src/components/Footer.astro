@@ -1,7 +1,12 @@
 ---
 import { getTranslations, type Language } from "../i18n/utils";
 
-const lang = (Astro.url.searchParams.get('lang') || 'en') as Language;
+interface Props {
+  lang?: Language;
+}
+
+const { lang = 'en' } = Astro.props;
+const t = getTranslations(lang);
 ---
 
 <footer class="w-full border-t border-border flex flex-row items-center bg-surface text-text-muted text-[12px] font-mono z-50 overflow-x-auto no-scrollbar">

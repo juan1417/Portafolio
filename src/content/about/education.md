@@ -1,3 +1,3 @@
 # Education
 
-<!-- Add your education details here -->
+- **Software Engineering** - Pascual Bravo Institution - 2021 - Present

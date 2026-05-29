@@ -1,0 +1,3 @@
+# About Me
+
+Estudiante avanzado de Ingeniería de Software con un año de experiencia profesional como Desarrollador Full-Stack, con conocimientos en desarrollo backend (Python, JavaScript) y frontend (React, Angular, PHP). Cuento con una sólida base autodidacta, complementada con formación especializada en Python. Busco una oportunidad que me permita aplicar mis habilidades técnicas, mi mentalidad ágil y mi capacidad de aprendizaje continuo.
