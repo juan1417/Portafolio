@@ -44,11 +44,11 @@ const allTechs: string[] = Array.from(
           technologies
         </button>
         <div class="pl-4 pb-4 space-y-3 pt-2" id="tech-filters-list">
-          {allTechs.map(tech => (
+          {allTechs.map((tech, i) => (
             <label class="flex items-center gap-3 cursor-pointer group px-4">
-              <input type="checkbox" class="tech-filter hidden" value={tech.toLowerCase()} checked />
-              <div class="w-4 h-4 border border-text-muted rounded-sm flex items-center justify-center group-hover:border-text transition-all bg-transparent relative">
-                  <i class="fa-solid fa-check text-[10px] text-text-muted hidden check-mark"></i>
+              <input type="checkbox" class="tech-filter hidden" value={tech.toLowerCase()} checked data-filter-index={i} />
+              <div class="w-4 h-4 border border-text-muted rounded-sm flex items-center justify-center group-hover:border-text transition-all bg-transparent relative checkbox-box">
+                  <i class="fa-solid fa-check text-[10px] text-text-muted check-mark" data-check-index={i}></i>
               </div>
               <div class="flex items-center gap-2 text-text-muted text-sm group-hover:text-text transition-colors font-mono">
                 <i class={`${langIcons[tech] || "fa-solid fa-code"} text-sm opacity-70 group-hover:opacity-100`}></i>
@@ -96,7 +96,7 @@ const allTechs: string[] = Array.from(
                         </div>
                         <div class="p-8 space-y-6 flex flex-col flex-grow">
                           <p class="text-text-muted text-[13px] leading-relaxed line-clamp-3 font-mono">
-                            {repo.description || t.projects.noDescription}
+                            {repo.readme || repo.description || t.projects.noDescription}
                           </p>
                           <div class="mt-auto pt-4 flex gap-4">
                             <a href={repo.html_url} target="_blank" class="px-5 py-2.5 bg-surface-elevated border border-border text-text rounded-lg text-xs hover:bg-surface transition-colors font-mono hover:border-secondary">
@@ -153,19 +153,19 @@ const allTechs: string[] = Array.from(
       };
 
       techFilters.forEach(filter => {
-        filter.addEventListener('change', (e) => {
-          const checkbox = e.target as HTMLInputElement;
-          const checkMark = checkbox.nextElementSibling?.querySelector('.check-mark');
-          if (checkbox.checked) {
-            checkMark?.classList.remove('hidden');
-          } else {
-            checkMark?.classList.add('hidden');
+        filter.addEventListener('change', () => {
+          const idx = filter.getAttribute('data-filter-index');
+          const checkMark = document.querySelector(`.check-mark[data-check-index="${idx}"]`) as HTMLElement | null;
+          if (checkMark) {
+            checkMark.style.display = filter.checked ? '' : 'none';
           }
           filterProjects();
         });
 
         if (filter.checked) {
-          filter.nextElementSibling?.querySelector('.check-mark')?.classList.remove('hidden');
+          const idx = filter.getAttribute('data-filter-index');
+          const checkMark = document.querySelector(`.check-mark[data-check-index="${idx}"]`) as HTMLElement | null;
+          if (checkMark) checkMark.style.display = '';
         }
       });
     });

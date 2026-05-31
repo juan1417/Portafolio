@@ -12,6 +12,7 @@ export interface GitHubRepo {
   updated_at: string;
   fork: boolean;
   languages?: string[];
+  readme?: string;
 }
 
 // Set of repositories we never want to display
@@ -42,30 +43,81 @@ export async function getRepos(): Promise<{ repos: GitHubRepo[]; fetchError: boo
   }
 
   try {
-    const res = await fetch(
-      "https://api.github.com/users/juan1417/repos?per_page=100&sort=updated",
-      { headers: { Accept: "application/vnd.github+json" } }
-    );
-    if (!res.ok) {
-      return { repos: [], fetchError: true };
+    const all: GitHubRepo[] = [];
+    let nextUrl = `https://api.github.com/users/juan1417/repos?per_page=100&sort=updated`;
+
+    while (nextUrl) {
+      const res = await fetch(nextUrl, {
+        headers: { Accept: "application/vnd.github+json" },
+      });
+      if (!res.ok) {
+        return { repos: [], fetchError: true };
+      }
+      const pageRepos: GitHubRepo[] = await res.json();
+      all.push(...pageRepos);
+
+      // Follow pagination Link header
+      const linkHeader = res.headers.get("Link") || "";
+      const nextMatch = linkHeader.match(/<([^>]+)>;\s*rel="next"/);
+      nextUrl = nextMatch ? nextMatch[1] : "";
     }
-    const all: GitHubRepo[] = await res.json();
+
     const filtered = all.filter((r) => !r.fork && !EXCLUDED_REPOS.has(r.name));
     const enriched = await Promise.all(
       filtered.map(async (repo) => {
         const safeTopics = Array.isArray(repo.topics) ? repo.topics : [];
+        let languages: string[] = [];
+        let readme: string | undefined;
+
         try {
-          if (!repo.languages_url) return { ...repo, topics: safeTopics };
-          const langRes = await fetch(repo.languages_url, {
-            headers: { Accept: "application/vnd.github+json" },
-          });
-          if (!langRes.ok) return { ...repo, topics: safeTopics };
-          const langData = (await langRes.json()) as Record<string, number>;
-          const languages = Object.keys(langData);
-          return { ...repo, topics: safeTopics, languages };
+          // Fetch languages
+          if (repo.languages_url) {
+            const langRes = await fetch(repo.languages_url, {
+              headers: { Accept: "application/vnd.github+json" },
+            });
+            if (langRes.ok) {
+              const langData = (await langRes.json()) as Record<string, number>;
+              languages = Object.keys(langData);
+            }
+          }
+
+          // Fetch README and extract first paragraph
+          const readmeRes = await fetch(
+            `https://api.github.com/repos/juan1417/${repo.name}/readme`,
+            { headers: { Accept: "application/vnd.github+json" } }
+          );
+          if (readmeRes.ok) {
+            const readmeData = await readmeRes.json() as { content?: string; html_url?: string };
+            if (readmeData.content) {
+              // README content is base64 encoded — decode as UTF-8
+              const binary = atob(readmeData.content.replace(/\n/g, ''));
+              const decoded = new TextDecoder('utf-8').decode(
+                Uint8Array.from(binary, c => c.charCodeAt(0))
+              );
+              // Strip markdown: headers, links, code blocks, bold/italic, etc.
+              const cleaned = decoded
+                .replace(/^#+\s+/gm, '')          // remove headers
+                .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // links → text
+                .replace(/!\[([^\]]*)\]\([^)]+\)/g, '')  // images
+                .replace(/```[\s\S]*?```/g, '')     // code blocks
+                .replace(/`([^`]+)`/g, '$1')       // inline code
+                .replace(/<[^>]+>/g, '')           // strip HTML tags
+                .replace(/[*_`~>]/g, '')           // remaining markdown symbols
+                .replace(/\n+/g, ' ')              // collapse newlines
+                .trim();
+              // Extract first sentence/paragraph (stop at first period + newline or double newline)
+              const first = cleaned.split(/\.\s+/)[0].trim();
+              // Skip if description is too short or just the repo name
+              if (first.length > 30 && first.toLowerCase() !== repo.name.toLowerCase()) {
+                readme = first.slice(0, 300);
+              }
+            }
+          }
         } catch {
-          return { ...repo, topics: safeTopics };
+          // Silently ignore fetch errors for individual repos
         }
+
+        return { ...repo, topics: safeTopics, languages, readme };
       })
     );
     // Update cache
