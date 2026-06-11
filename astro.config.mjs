@@ -8,4 +8,8 @@ export default defineConfig({
   adapter: vercel(),
   output: 'server',
   vite: { plugins: [tailwindcss()] },
+  markdown: {
+    remarkPlugins: [],
+    rehypePlugins: [],
+  },
 });

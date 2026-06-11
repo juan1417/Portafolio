@@ -12,10 +12,10 @@ Astro v5 + Tailwind v4 portfolio website for Juan Manuel Machado. Server-side re
 pnpm dev        # Start dev server with HMR
 pnpm build      # Production build
 pnpm preview    # Preview production build locally
-pnpm astro check # Type-check Astro files
+pnpm astro check # Type-check Astro files (primary validation)
 ```
 
-Tests use vitest (see `src/utils/githubRepos.test.ts`, `src/i18n/utils.test.ts`).
+Tests use vitest with configuration in `vitest.config.ts`. Test files live alongside source in `src/utils/githubRepos.test.ts` and `src/i18n/utils.test.ts`. Run tests directly with `npx vitest` (no `pnpm test` script is defined).
 
 ## Architecture
 

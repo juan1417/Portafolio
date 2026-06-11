@@ -13,6 +13,7 @@ export interface GitHubRepo {
   fork: boolean;
   languages?: string[];
   readme?: string;
+  images?: string[];
 }
 
 // Set of repositories we never want to display
@@ -117,7 +118,24 @@ export async function getRepos(): Promise<{ repos: GitHubRepo[]; fetchError: boo
           // Silently ignore fetch errors for individual repos
         }
 
-        return { ...repo, topics: safeTopics, languages, readme };
+        // Fetch images folder contents
+        let images: string[] = [];
+        try {
+          const imagesRes = await fetch(
+            `https://api.github.com/repos/juan1417/${repo.name}/contents/images`,
+            { headers: { Accept: "application/vnd.github+json" } }
+          );
+          if (imagesRes.ok) {
+            const imagesData = await imagesRes.json() as Array<{ name: string; type: string }>;
+            images = imagesData
+              .filter(f => f.type === "file" && /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(f.name))
+              .map(f => `https://raw.githubusercontent.com/juan1417/${repo.name}/main/images/${f.name}`);
+          }
+        } catch {
+          // ignore
+        }
+
+        return { ...repo, topics: safeTopics, languages, readme, images };
       })
     );
     // Update cache

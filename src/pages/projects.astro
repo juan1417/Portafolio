@@ -10,52 +10,118 @@ const t = getTranslations(lang);
 const { repos, fetchError } = await getRepos();
 
 const langIcons: Record<string, string> = {
-  "JavaScript":  "devicon-javascript-plain",
-  "TypeScript":  "devicon-typescript-plain",
-  "Python":      "devicon-python-plain",
-  "PHP":         "devicon-php-plain",
-  "Kotlin":      "devicon-kotlin-plain",
-  "Java":        "devicon-java-plain",
-  "C#":          "devicon-csharp-plain",
-  "Go":          "devicon-go-plain",
-  "HTML":        "devicon-html5-plain",
-  "CSS":         "devicon-css3-plain",
+  JavaScript: "devicon-javascript-plain",
+  TypeScript: "devicon-typescript-plain",
+  Python: "devicon-python-plain",
+  PHP: "devicon-php-plain",
+  Kotlin: "devicon-kotlin-plain",
+  Java: "devicon-java-plain",
+  "C#": "devicon-csharp-plain",
+  Go: "devicon-go-plain",
+  HTML: "devicon-html5-plain",
+  CSS: "devicon-css3-plain",
+  Ruby: "devicon-ruby-plain",
+  Swift: "devicon-swift-plain",
+  Rust: "devicon-rust-plain",
+  "C++": "devicon-cplusplus-plain",
+  C: "devicon-c-plain",
+  Dart: "devicon-dart-plain",
+  Shell: "devicon-bash-plain",
+  R: "devicon-r-plain",
+  Scala: "devicon-scala-plain",
+  Haskell: "devicon-haskell-plain",
+  Elixir: "devicon-elixir-plain",
+  Lua: "devicon-lua-plain",
+  Perl: "devicon-perl-plain",
+  React: "devicon-react-original",
+  Vue: "devicon-vuejs-plain",
+  Angular: "devicon-angular-plain",
+  "Node.js": "devicon-nodejs-plain",
+  Laravel: "devicon-laravel-original",
+  Django: "devicon-django-plain",
+  Flask: "devicon-flask-original",
+  Spring: "devicon-spring-plain",
+  "Next.js": "devicon-nextjs-plain",
+  "Tailwind CSS": "devicon-tailwindcss-original",
+  Svelte: "devicon-svelte-plain",
+  PostgreSQL: "devicon-postgresql-plain",
+  MySQL: "devicon-mysql-plain",
+  MongoDB: "devicon-mongodb-plain",
+  SQLite: "devicon-sqlite-plain",
+  Docker: "devicon-docker-plain",
+  Kubernetes: "devicon-kubernetes-plain",
+  AWS: "devicon-amazonwebservices-plain-wordmark",
+  Azure: "devicon-azure-plain",
+  Firebase: "devicon-firebase-plain",
+  Git: "devicon-git-plain",
+  GitHub: "devicon-github-original",
+  Vercel: "devicon-vercel-original",
+  Supabase: "devicon-supabase-plain",
+  Figma: "devicon-figma-plain",
 };
 
 const allTechs: string[] = Array.from(
-  new Set<string>(repos.flatMap(r => [...(r.languages || []), ...(r.topics || [])]))
-).filter(
-  (tech) => langIcons[tech] || ["React", "Vue", "Angular", "Laravel", "Node", "Tailwind"].includes(tech)
-).slice(0, 8);
+  new Set<string>(
+    repos.flatMap((r) => [...(r.languages || []), ...(r.topics || [])]),
+  ),
+)
+  .filter(
+    (tech) =>
+      langIcons[tech] ||
+      ["React", "Vue", "Angular", "Laravel", "Node", "Tailwind"].includes(tech),
+  )
+  .slice(0, 8);
 ---
 
 <Base lang={lang}>
   <main class="flex-grow flex overflow-hidden h-full">
     <!-- Left Sidebar (Filters) -->
-    <aside class="w-64 border-r border-border hidden md:flex flex-col bg-surface shrink-0">
-      <div class="px-4 py-2 text-text-muted text-[11px] uppercase tracking-wider font-bold flex items-center justify-between border-b border-border">
+    <aside
+      class="w-64 border-r border-border hidden md:flex flex-col bg-surface shrink-0"
+    >
+      <div
+        class="px-4 py-2 text-text-muted text-[11px] uppercase tracking-wider font-bold flex items-center justify-between border-b border-border"
+      >
         <span>projects</span>
         <i class="fa-solid fa-filter text-[10px]"></i>
       </div>
-      
+
       <div class="py-4">
-        <button class="folder-toggle w-full flex items-center gap-2 px-4 py-2 text-text text-sm hover:bg-surface-elevated transition-colors group font-mono" data-target="tech-filters-list">
-          <i class="fa-solid fa-caret-down text-[10px] transition-transform duration-200"></i>
+        <button
+          class="folder-toggle w-full flex items-center gap-2 px-4 py-2 text-text text-sm hover:bg-surface-elevated transition-colors group font-mono"
+          data-target="tech-filters-list"
+        >
+          <i
+            class="fa-solid fa-caret-down text-[10px] transition-transform duration-200"
+          ></i>
           technologies
         </button>
         <div class="pl-4 pb-4 space-y-3 pt-2" id="tech-filters-list">
-          {allTechs.map((tech, i) => (
-            <label class="flex items-center gap-3 cursor-pointer group px-4">
-              <input type="checkbox" class="tech-filter hidden" value={tech.toLowerCase()} checked data-filter-index={i} />
-              <div class="w-4 h-4 border border-text-muted rounded-sm flex items-center justify-center group-hover:border-text transition-all bg-transparent relative checkbox-box">
-                  <i class="fa-solid fa-check text-[10px] text-text-muted check-mark" data-check-index={i}></i>
-              </div>
-              <div class="flex items-center gap-2 text-text-muted text-sm group-hover:text-text transition-colors font-mono">
-                <i class={`${langIcons[tech] || "fa-solid fa-code"} text-sm opacity-70 group-hover:opacity-100`}></i>
-                {tech}
-              </div>
-            </label>
-          ))}
+          {
+            allTechs.map((tech, i) => (
+              <label class="flex items-center gap-3 cursor-pointer group px-4">
+                <input
+                  type="checkbox"
+                  class="tech-filter hidden"
+                  value={tech.toLowerCase()}
+                  checked
+                  data-filter-index={i}
+                />
+                <div class="w-4 h-4 border border-text-muted rounded-sm flex items-center justify-center group-hover:border-text transition-all bg-transparent relative checkbox-box">
+                  <i
+                    class="fa-solid fa-check text-[10px] text-text-muted check-mark"
+                    data-check-index={i}
+                  />
+                </div>
+                <div class="flex items-center gap-2 text-text-muted text-sm group-hover:text-text transition-colors font-mono">
+                  <i
+                    class={`${langIcons[tech] || "fa-solid fa-code"} text-sm opacity-70 group-hover:opacity-100`}
+                  />
+                  {tech}
+                </div>
+              </label>
+            ))
+          }
         </div>
       </div>
     </aside>
@@ -63,109 +129,273 @@ const allTechs: string[] = Array.from(
     <!-- Main Content Area -->
     <div class="flex-grow flex flex-col bg-surface overflow-hidden">
       <!-- Editor Tabs (Page Title) -->
-      <div class="flex border-b border-border overflow-x-auto bg-surface shrink-0 no-scrollbar h-10">
-        <div class="px-6 py-2 border-r border-border text-text text-sm flex items-center gap-4 bg-surface-elevated min-w-fit border-t-2 border-t-primary">
+      <div
+        class="flex border-b border-border overflow-x-auto bg-surface shrink-0 no-scrollbar h-10"
+      >
+        <div
+          class="px-6 py-2 border-r border-border text-text text-sm flex items-center gap-4 bg-surface-elevated min-w-fit border-t-2 border-t-primary"
+        >
           <i class="fa-solid fa-code text-secondary text-xs"></i>
           <span class="font-mono">{t.projects.title}.json</span>
-          <i class="fa-solid fa-xmark text-text-muted hover:text-text cursor-pointer text-xs"></i>
+          <i
+            class="fa-solid fa-xmark text-text-muted hover:text-text cursor-pointer text-xs"
+          ></i>
         </div>
       </div>
 
       <!-- Projects Grid -->
       <div class="flex-grow overflow-y-auto p-6 md:p-12 custom-scrollbar">
-        {fetchError ? (
-          <div class="h-full flex items-center justify-center text-text-muted font-mono">
-            <p>// {t.projects.fetchError}</p>
-          </div>
-        ) : (
-          <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-12 max-w-7xl mx-auto">
-            {repos.map((repo, index) => {
-              const repoTechs = [...(repo.languages || []), ...(repo.topics || [])].map(t => t.toLowerCase());
-              return (
-                <article class="project-card space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500 group" 
-                         style={`animation-delay: ${index * 50}ms`}
-                         data-techs={repoTechs.join(',')}>
-                      <div class="flex items-center gap-2 mb-2 font-mono">
-                        <span class="text-indigo font-bold text-sm">Project {index + 1}</span>
-                        <span class="text-text-muted text-sm">// _{repo.name}</span>
+        {
+          fetchError ? (
+            <div class="h-full flex items-center justify-center text-text-muted font-mono">
+              <p>// {t.projects.fetchError}</p>
+            </div>
+          ) : (
+            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-12 max-w-7xl mx-auto">
+              {repos.map((repo, index) => {
+                const repoTechs = [
+                  ...(repo.languages || []),
+                  ...(repo.topics || []),
+                ].map((t) => t.toLowerCase());
+                return (
+                  <article
+                    class="project-card space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500 group"
+                    style={`animation-delay: ${index * 50}ms`}
+                    data-techs={repoTechs.join(",")}
+                  >
+                    <div class="flex items-center gap-2 mb-2 font-mono">
+                      <span class="text-indigo font-bold text-sm">
+                        Project {index + 1}
+                      </span>
+                      <span class="text-text-muted text-sm">
+                        // _{repo.name}
+                      </span>
+                    </div>
+                    <div class="bg-background/40 border border-border rounded-2xl overflow-hidden hover:border-text-muted transition-all flex flex-col h-full group-hover:shadow-2xl group-hover:shadow-secondary/5">
+                      <div class="h-44 bg-surface-elevated/50 flex items-center justify-center relative overflow-hidden border-b border-border group/slide">
+                        {repo.images && repo.images.length > 0 ? (
+                          <div
+                            class="slideshow-container absolute inset-0"
+                            data-images={JSON.stringify(repo.images)}
+                          >
+                            {repo.images.map((img, i) => (
+                              <img
+                                src={img}
+                                alt={`${repo.name} screenshot ${i + 1}`}
+                                class={`slideshow-image absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${i === 0 ? "opacity-100" : "opacity-0"}`}
+                                data-index={i}
+                              />
+                            ))}
+                            {repo.images.length > 1 && (
+                              <>
+                                <button
+                                  class="slideshow-prev absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-surface/80 border border-border flex items-center justify-center text-text-muted hover:text-text hover:border-secondary transition-all opacity-0 group-hover/slide:opacity-100 z-10"
+                                  data-slideshow
+                                >
+                                  <i class="fa-solid fa-chevron-left text-xs" />
+                                </button>
+                                <button
+                                  class="slideshow-next absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-surface/80 border border-border flex items-center justify-center text-text-muted hover:text-text hover:border-secondary transition-all opacity-0 group-hover/slide:opacity-100 z-10"
+                                  data-slideshow
+                                >
+                                  <i class="fa-solid fa-chevron-right text-xs" />
+                                </button>
+                                <div class="slideshow-dots absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+                                  {repo.images.map((_, i) => (
+                                    <button
+                                      class={`slideshow-dot w-1.5 h-1.5 rounded-full transition-all ${i === 0 ? "bg-text" : "bg-text-muted/50"}`}
+                                      data-slideshow
+                                      data-dot-index={i}
+                                    />
+                                  ))}
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        ) : (
+                          <i
+                            class={`${langIcons[repo.language || ""] || "fa-solid fa-code"} text-7xl text-border group-hover:scale-110 group-hover:text-text-muted/20 transition-all duration-700`}
+                          />
+                        )}
+                        <div class="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent pointer-events-none" />
                       </div>
-                      <div class="bg-background/40 border border-border rounded-2xl overflow-hidden hover:border-text-muted transition-all flex flex-col h-full group-hover:shadow-2xl group-hover:shadow-secondary/5">
-                        <div class="h-44 bg-surface-elevated/50 flex items-center justify-center relative overflow-hidden border-b border-border">
-                          <i class={`${langIcons[repo.language || ""] || "fa-solid fa-code"} text-7xl text-border group-hover:scale-110 group-hover:text-text-muted/20 transition-all duration-700`}></i>
-                          <div class="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent"></div>
-                        </div>
-                        <div class="p-8 space-y-6 flex flex-col flex-grow">
-                          <p class="text-text-muted text-[13px] leading-relaxed line-clamp-3 font-mono">
-                            {repo.readme || repo.description || t.projects.noDescription}
-                          </p>
-                          <div class="mt-auto pt-4 flex gap-4">
-                            <a href={repo.html_url} target="_blank" class="px-5 py-2.5 bg-surface-elevated border border-border text-text rounded-lg text-xs hover:bg-surface transition-colors font-mono hover:border-secondary">
-                              view-project
-                            </a>
+                      <div class="p-8 space-y-6 flex flex-col flex-grow">
+                        <p class="text-text-muted text-[13px] leading-relaxed line-clamp-3 font-mono">
+                          {repo.readme ||
+                            repo.description ||
+                            t.projects.noDescription}
+                        </p>
+                        <div class="mt-auto pt-4 flex items-center justify-between gap-4">
+                          <a
+                            href={repo.html_url}
+                            target="_blank"
+                            class="px-5 py-2.5 bg-surface-elevated border border-border text-text rounded-lg text-xs hover:bg-surface transition-colors font-mono hover:border-secondary shrink-0"
+                          >
+                            view-project
+                          </a>
+                          <div class="flex items-center gap-2 flex-wrap">
+                            {(repo.languages || []).slice(0, 6).map((tech) => (
+                              <i
+                                class={`${langIcons[tech] || "fa-solid fa-code"} text-sm text-text-muted/60`}
+                                title={tech}
+                              />
+                            ))}
                           </div>
                         </div>
                       </div>
-                    </article>
-                  )
-                })}
-          </div>
-        )}
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )
+        }
       </div>
     </div>
   </main>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const techFilters = document.querySelectorAll('.tech-filter') as NodeListOf<HTMLInputElement>;
-      const projectCards = document.querySelectorAll('.project-card');
-      const folderToggles = document.querySelectorAll('.folder-toggle');
+    document.addEventListener("DOMContentLoaded", () => {
+      // Slideshow logic
+      const slideshowContainers = document.querySelectorAll(
+        ".slideshow-container",
+      );
+      slideshowContainers.forEach((container) => {
+        const images = container.querySelectorAll(
+          ".slideshow-image",
+        ) as NodeListOf<HTMLImageElement>;
+        const dots = container.querySelectorAll(
+          ".slideshow-dot",
+        ) as NodeListOf<HTMLButtonElement>;
+        const prevBtn = container.querySelector(
+          ".slideshow-prev",
+        ) as HTMLButtonElement | null;
+        const nextBtn = container.querySelector(
+          ".slideshow-next",
+        ) as HTMLButtonElement | null;
+        if (!images.length) return;
 
-      folderToggles.forEach(toggle => {
-        toggle.addEventListener('click', () => {
-          const targetId = toggle.getAttribute('data-target');
+        let currentIndex = 0;
+        let intervalId: ReturnType<typeof setInterval> | null = null;
+
+        const showImage = (index: number) => {
+          images.forEach((img, i) => {
+            img.classList.toggle("opacity-100", i === index);
+            img.classList.toggle("opacity-0", i !== index);
+          });
+          dots.forEach((dot, i) => {
+            dot.classList.toggle("bg-text", i === index);
+            dot.classList.toggle("bg-text-muted/50", i !== index);
+          });
+          currentIndex = index;
+        };
+
+        const nextImage = () => showImage((currentIndex + 1) % images.length);
+        const prevImage = () =>
+          showImage((currentIndex - 1 + images.length) % images.length);
+
+        const startAutoPlay = () => {
+          if (intervalId) clearInterval(intervalId);
+          intervalId = setInterval(nextImage, 4000);
+        };
+
+        const stopAutoPlay = () => {
+          if (intervalId) {
+            clearInterval(intervalId);
+            intervalId = null;
+          }
+        };
+
+        if (prevBtn)
+          prevBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            prevImage();
+            startAutoPlay();
+          });
+        if (nextBtn)
+          nextBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            nextImage();
+            startAutoPlay();
+          });
+        dots.forEach((dot) => {
+          dot.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const idx = parseInt(dot.getAttribute("data-dot-index") || "0");
+            showImage(idx);
+            startAutoPlay();
+          });
+        });
+
+        container.addEventListener("mouseenter", stopAutoPlay);
+        container.addEventListener("mouseleave", startAutoPlay);
+        document.addEventListener("visibilitychange", () => {
+          document.hidden ? stopAutoPlay() : startAutoPlay();
+        });
+
+        startAutoPlay();
+      });
+
+      // Tech filter logic
+      const techFilters = document.querySelectorAll(
+        ".tech-filter",
+      ) as NodeListOf<HTMLInputElement>;
+      const projectCards = document.querySelectorAll(".project-card");
+      const folderToggles = document.querySelectorAll(".folder-toggle");
+
+      folderToggles.forEach((toggle) => {
+        toggle.addEventListener("click", () => {
+          const targetId = toggle.getAttribute("data-target");
           if (!targetId) return;
           const target = document.getElementById(targetId);
-          const icon = toggle.querySelector('i');
+          const icon = toggle.querySelector("i");
           if (target) {
-            target.classList.toggle('hidden');
+            target.classList.toggle("hidden");
           }
           if (icon) {
-            icon.classList.toggle('rotate-[-90deg]');
+            icon.classList.toggle("rotate-[-90deg]");
           }
         });
       });
 
       const filterProjects = () => {
         const activeTechs = Array.from(techFilters)
-          .filter(f => f.checked)
-          .map(f => f.value);
+          .filter((f) => f.checked)
+          .map((f) => f.value);
 
-        projectCards.forEach(card => {
-          const cardTechs = (card as HTMLElement).dataset.techs?.split(',') || [];
-          const matches = activeTechs.length === 0 || activeTechs.some(tech => cardTechs.includes(tech));
-          
+        projectCards.forEach((card) => {
+          const cardTechs =
+            (card as HTMLElement).dataset.techs?.split(",") || [];
+          const matches =
+            activeTechs.length === 0 ||
+            activeTechs.some((tech) => cardTechs.includes(tech));
+
           if (matches) {
-            (card as HTMLElement).classList.remove('hidden');
+            (card as HTMLElement).classList.remove("hidden");
           } else {
-            (card as HTMLElement).classList.add('hidden');
+            (card as HTMLElement).classList.add("hidden");
           }
         });
       };
 
-      techFilters.forEach(filter => {
-        filter.addEventListener('change', () => {
-          const idx = filter.getAttribute('data-filter-index');
-          const checkMark = document.querySelector(`.check-mark[data-check-index="${idx}"]`) as HTMLElement | null;
+      techFilters.forEach((filter) => {
+        filter.addEventListener("change", () => {
+          const idx = filter.getAttribute("data-filter-index");
+          const checkMark = document.querySelector(
+            `.check-mark[data-check-index="${idx}"]`,
+          ) as HTMLElement | null;
           if (checkMark) {
-            checkMark.style.display = filter.checked ? '' : 'none';
+            checkMark.style.display = filter.checked ? "" : "none";
           }
           filterProjects();
         });
 
         if (filter.checked) {
-          const idx = filter.getAttribute('data-filter-index');
-          const checkMark = document.querySelector(`.check-mark[data-check-index="${idx}"]`) as HTMLElement | null;
-          if (checkMark) checkMark.style.display = '';
+          const idx = filter.getAttribute("data-filter-index");
+          const checkMark = document.querySelector(
+            `.check-mark[data-check-index="${idx}"]`,
+          ) as HTMLElement | null;
+          if (checkMark) checkMark.style.display = "";
         }
       });
     });

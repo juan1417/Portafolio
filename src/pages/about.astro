@@ -1,15 +1,47 @@
 ---
 import Base from "../layout/base.astro";
-import { type Language } from "../i18n/utils"
+import { getTranslations, type Language } from "../i18n/utils"
 import Bio from "../content/about/bio.md"
 import BioEs from "../content/about/bio.es.md"
 import Education from "../content/about/education.md"
 import EducationEs from "../content/about/education.es.md"
 import Experience from "../content/about/experience.md"
 import ExperienceEs from "../content/about/experience.es.md"
-import Skills from "../content/about/skill.md"
 
 const lang = (Astro.url.searchParams.get("lang") || "en") as Language;
+const t = getTranslations(lang);
+
+const skillIcons: Record<string, string> = {
+  "Python": "devicon-python-plain",
+  "Node.js": "devicon-nodejs-plain",
+  "Java": "devicon-java-plain",
+  "Go": "devicon-go-plain",
+  "React": "devicon-react-original",
+  "Angular": "devicon-angular-plain",
+  "Vue": "devicon-vuejs-plain",
+  "JavaScript": "devicon-javascript-plain",
+  "HTML": "devicon-html5-plain",
+  "Tailwind CSS": "devicon-tailwindcss-original",
+  "PHP": "devicon-php-plain",
+  "Laravel": "devicon-laravel-original",
+  "SQL Server": "devicon-microsoftsqlserver-plain",
+  "PostgreSQL": "devicon-postgresql-plain",
+  "MySQL": "devicon-mysql-plain",
+  "MongoDB": "devicon-mongodb-plain",
+  "Git": "devicon-git-plain",
+  "GitHub": "devicon-github-original",
+  "Figma": "devicon-figma-plain",
+  "Vercel": "devicon-vercel-original",
+  "Supabase": "devicon-supabase-plain",
+  "Cloudflare": "devicon-cloudflare-plain",
+  "Azure": "devicon-azure-plain",
+  "AWS": "devicon-amazonwebservices-plain-wordmark",
+  "C#": "devicon-csharp-plain",
+  "Kotlin": "devicon-kotlin-plain",
+  ".NET": "devicon-dotnetcore-plain",
+  "TypeScript": "devicon-typescript-plain",
+};
+
 ---
 
 <Base lang={lang}>
@@ -89,14 +121,9 @@ const lang = (Astro.url.searchParams.get("lang") || "en") as Language;
         <!-- Text Content - Full Width -->
         <div class="flex-grow p-4 md:p-8 overflow-y-auto custom-scrollbar">
           <div class="flex gap-8">
-            <div class="text-text-muted text-right select-none space-y-0.5 hidden sm:block min-w-[2.5rem] font-mono text-sm pt-1">
-              {Array.from({ length: 100 }).map((_, i) => (
-                <p>{i + 1}</p>
-              ))}
-            </div>
+            <div id="line-numbers" class="text-text-muted text-right select-none hidden sm:flex flex-col min-w-[2.5rem] font-mono text-sm pt-1 leading-[1.6rem] gap-0"></div>
             <div class="text-text-muted space-y-1 w-full font-mono text-sm pt-1">
-              <p class="mb-4">/**</p>
-              <div id="editor-content" class="text-text-muted space-y-4 pl-4 border-l border-border/20">
+              <div id="editor-content" class="text-text-muted space-y-4  border-l border-border/20">
                 <div data-content="bio" class="content-section prose prose-invert max-w-none">
                   {lang === "es" ? <BioEs /> : <Bio />}
                 </div>
@@ -106,11 +133,36 @@ const lang = (Astro.url.searchParams.get("lang") || "en") as Language;
                 <div data-content="experience" class="content-section hidden prose prose-invert max-w-none">
                   {lang === "es" ? <ExperienceEs /> : <Experience />}
                 </div>
-                <div data-content="skills" class="content-section hidden prose prose-invert max-w-none">
-                  <Skills />
+                <div data-content="skills" class="content-section hidden">
+                  <table class="w-full text-sm font-mono">
+                    <thead>
+                      <tr class="border-b border-border">
+                        <th class="text-left py-2 pr-4 text-text-muted">Category</th>
+                        <th class="text-left py-2 text-text-muted">Technologies</th>
+                      </tr>
+                    </thead>
+                    <tbody class="text-text-muted">
+                      {Object.entries(t.skill.categories).map(([key, cat]) => (
+                        <tr class="border-b border-border/50">
+                          <td class="py-3 pr-4 align-top">
+                            <span class="text-secondary font-semibold">{cat.title}</span>
+                          </td>
+                          <td class="py-3 align-top">
+                            <div class="flex flex-wrap gap-2">
+                              {cat.technologies.map((tech) => (
+                                <span class="inline-flex items-center gap-1.5 bg-surface-elevated px-2 py-1 rounded text-xs">
+                                  <i class={`${skillIcons[tech] || "fa-solid fa-code"} text-xs text-text-muted`}></i>
+                                  {tech}
+                                </span>
+                              ))}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
-              <p class="mt-4 pl-4">*/</p>
             </div>
           </div>
         </div>
@@ -134,18 +186,18 @@ const lang = (Astro.url.searchParams.get("lang") || "en") as Language;
     color: var(--color-text-muted);
   }
   .content-section :global(ul) {
-    list-style-type: none;
-    padding-left: 0;
+    list-style-type: disc;
+    padding-left: 1.5rem;
     margin-bottom: 1rem;
   }
   .content-section :global(li) {
     margin-bottom: 0.5rem;
     color: var(--color-text-muted);
+    list-style: none;
   }
   .content-section :global(li)::before {
-    content: "* ";
+    content: "•  ";
     color: var(--color-text-muted);
-    opacity: 0.5;
   }
   .content-section :global(strong) {
     color: var(--color-secondary);
@@ -187,7 +239,7 @@ const lang = (Astro.url.searchParams.get("lang") || "en") as Language;
     fileBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const file = btn.getAttribute('data-file');
-        
+
         // Update active button
         fileBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
@@ -196,14 +248,37 @@ const lang = (Astro.url.searchParams.get("lang") || "en") as Language;
         if (tabName) tabName.textContent = file + '.md';
 
         // Switch content
+        let activeSection: HTMLElement | null = null;
         contentSections.forEach(section => {
           if (section.getAttribute('data-content') === file) {
             section.classList.remove('hidden');
+            activeSection = section as HTMLElement;
           } else {
             section.classList.add('hidden');
           }
         });
+
+        // Update line numbers after content renders
+        if (activeSection) {
+          requestAnimationFrame(() => updateLineNumbers(activeSection));
+        }
       });
     });
+
+    // Update line numbers based on visible content height
+    const lineNumbersEl = document.getElementById('line-numbers');
+    const updateLineNumbers = (section: HTMLElement | null) => {
+      if (!lineNumbersEl || !section) return;
+      const contentHeight = section.scrollHeight;
+      const lineHeight = 22; // approx px for text-sm + prose spacing
+      const lineCount = Math.max(1, Math.ceil(contentHeight / lineHeight)) + 2;
+      lineNumbersEl.innerHTML = Array.from({ length: lineCount })
+        .map((_, i) => `<span class="block leading-[1.6rem] h-[1.6rem]">${i + 2}</span>`)
+        .join('');
+    };
+
+    // Set initial line numbers for bio on first load
+    const bioSection = document.querySelector('[data-content="bio"]') as HTMLElement | null;
+    if (bioSection) updateLineNumbers(bioSection);
   });
 </script>
