@@ -6,7 +6,7 @@ const lang = (Astro.url.searchParams.get("lang") || "en") as Language;
 const t = getTranslations(lang);
 ---
 
-<Base lang={lang}>
+<Base lang={lang} title="_contact-me | Juan Manuel Machado" description="Contact Juan Manuel Machado for job opportunities or software project collaborations.">
   <main class="flex-grow flex overflow-hidden h-full">
     <!-- Left Sidebar (Explorer) -->
     <aside class="w-64 border-r border-border hidden md:flex flex-col bg-surface shrink-0">
@@ -39,11 +39,11 @@ const t = getTranslations(lang);
             find-me-also-in
           </button>
           <div class="pl-4 pb-2 space-y-2 pt-2" id="social-links">
-            <a href="https://www.linkedin.com/in/juanmachado1234" target="_blank" class="flex items-center gap-2 px-4 py-1 text-text-muted text-[13px] hover:text-text transition-colors font-mono">
+            <a href="https://www.linkedin.com/in/juanmachado1234" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-4 py-1 text-text-muted text-[13px] hover:text-text transition-colors font-mono">
               <i class="fa-solid fa-up-right-from-square text-[10px]"></i>
               LinkedIn
             </a>
-            <a href="https://github.com/juan1417" target="_blank" class="flex items-center gap-2 px-4 py-1 text-text-muted text-[13px] hover:text-text transition-colors font-mono">
+            <a href="https://github.com/juan1417" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-4 py-1 text-text-muted text-[13px] hover:text-text transition-colors font-mono">
               <i class="fa-solid fa-up-right-from-square text-[10px]"></i>
               GitHub
             </a>
@@ -67,32 +67,44 @@ const t = getTranslations(lang);
       <div class="flex-grow flex flex-col lg:flex-row overflow-hidden h-full">
         <!-- Form Section -->
         <div class="flex-grow p-6 md:p-12 overflow-y-auto border-r border-border flex items-center justify-center custom-scrollbar">
-          <form class="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <form action="https://formspree.io/f/xqeogvod" method="POST" class="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <input type="hidden" name="_language" value={lang} />
+            <input type="hidden" name="_next" value={"https://portafolio-codingspace.vercel.app/contact?lang=" + lang} />
             <div class="space-y-3">
-              <label for="name" class="text-text-muted text-sm font-mono tracking-tight">_name:</label>
+              <label for="contact-name" class="sr-only">{t.contactForm.labelName}</label>
+              <label for="contact-name" class="text-text-muted text-sm font-mono tracking-tight">_name:</label>
               <input 
                 type="text" 
-                id="name" 
+                id="contact-name"
+                name="name"
                 class="w-full bg-background/50 border border-border rounded-lg px-4 py-3 text-text-muted focus:border-text-muted focus:text-text outline-none transition-all font-mono text-sm shadow-inner"
                 placeholder="Juan Manuel"
+                required
               />
             </div>
             <div class="space-y-3">
-              <label for="email" class="text-text-muted text-sm font-mono tracking-tight">_email:</label>
+              <label for="contact-email" class="sr-only">{t.contactForm.labelEmail}</label>
+              <label for="contact-email" class="text-text-muted text-sm font-mono tracking-tight">_email:</label>
               <input 
                 type="email" 
-                id="email" 
+                id="contact-email"
+                name="email"
                 class="w-full bg-background/50 border border-border rounded-lg px-4 py-3 text-text-muted focus:border-text-muted focus:text-text outline-none transition-all font-mono text-sm shadow-inner"
                 placeholder="juan@example.com"
+                required
               />
             </div>
             <div class="space-y-3">
-              <label for="message" class="text-text-muted text-sm font-mono tracking-tight">_message:</label>
+              <label for="contact-message" class="sr-only">{t.contactForm.labelMessage}</label>
+              <label for="contact-message" class="text-text-muted text-sm font-mono tracking-tight">_message:</label>
               <textarea 
-                id="message" 
+                id="contact-message"
+                name="message"
                 rows="4"
                 class="w-full bg-background/50 border border-border rounded-lg px-4 py-3 text-text-muted focus:border-text-muted focus:text-text outline-none transition-all resize-none font-mono text-sm shadow-inner"
                 placeholder="Your message here..."
+                required
+                minlength="10"
               ></textarea>
             </div>
             <button class="px-6 py-2.5 bg-surface-elevated text-text border border-border rounded-lg text-sm hover:bg-background hover:border-secondary transition-all font-mono active:scale-95">
@@ -131,9 +143,9 @@ const t = getTranslations(lang);
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const nameInput = document.getElementById('name') as HTMLInputElement
-      const emailInput = document.getElementById('email') as HTMLInputElement
-      const messageInput = document.getElementById('message') as HTMLTextAreaElement
+      const nameInput = document.getElementById('contact-name') as HTMLInputElement
+      const emailInput = document.getElementById('contact-email') as HTMLInputElement
+      const messageInput = document.getElementById('contact-message') as HTMLTextAreaElement
       const folderToggles = document.querySelectorAll('.folder-toggle');
 
       const codeName = document.getElementById('code-name')

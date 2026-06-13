@@ -6,7 +6,7 @@ const lang = (Astro.url.searchParams.get('lang') || 'en') as Language;
 const t = getTranslations(lang);
 ---
 
-<Base lang={lang}>
+<Base lang={lang} title={t.error404.title + ' | Juan Manuel Machado'} description={t.error404.message}>
   <main class="flex-grow flex flex-col items-center justify-center p-8 bg-surface text-text">
     <h1 class="text-6xl font-bold text-primary">{t.error404.title}</h1>
     <p class="mt-4 text-lg">{t.error404.message}</p>

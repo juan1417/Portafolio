@@ -26,7 +26,7 @@ const { lang = 'en' } = Astro.props;
       <div id="game-over-overlay" class="absolute inset-0 bg-surface/80 backdrop-blur-sm flex flex-col items-center justify-center z-20 hidden">
         <div class="bg-surface border border-border p-8 rounded-lg text-center shadow-2xl">
           <h2 class="text-secondary text-2xl font-bold mb-2 font-mono">GAME OVER!</h2>
-          <p class="text-text-muted text-sm mb-6 font-mono">// better luck next time</p>
+          <p class="text-text-muted text-sm mb-6 font-mono" aria-hidden="true">// better luck next time</p>
           <button id="play-again" class="text-text-muted hover:text-text font-mono transition-colors text-sm underline decoration-secondary underline-offset-4">
             play-again
           </button>
@@ -37,7 +37,7 @@ const { lang = 'en' } = Astro.props;
       <div id="win-overlay" class="absolute inset-0 bg-surface/80 backdrop-blur-sm flex flex-col items-center justify-center z-20 hidden">
         <div class="bg-surface border border-border p-8 rounded-lg text-center shadow-2xl">
           <h2 class="text-secondary text-2xl font-bold mb-2 font-mono">WELL DONE!</h2>
-          <p class="text-text-muted text-sm mb-6 font-mono">// you cleared the game</p>
+          <p class="text-text-muted text-sm mb-6 font-mono" aria-hidden="true">// you cleared the game</p>
           <button id="win-play-again" class="text-text-muted hover:text-text font-mono transition-colors text-sm underline decoration-secondary underline-offset-4">
             play-again
           </button>
@@ -50,7 +50,7 @@ const { lang = 'en' } = Astro.props;
       <div class="space-y-8">
         <!-- Controls Guide -->
         <div class="bg-surface-elevated/40 p-4 rounded-lg border border-border/50">
-          <div class="font-mono text-[12px] mb-4">
+          <div class="font-mono text-[12px] mb-4" aria-hidden="true">
             <p class="text-text-muted">// use keyboard</p>
             <p class="text-text-muted">// arrows to play</p>
           </div>
@@ -73,7 +73,7 @@ const { lang = 'en' } = Astro.props;
 
         <!-- Food Counter -->
         <div class="space-y-4">
-          <div class="text-text-muted font-mono text-[12px]">
+          <div class="text-text-muted font-mono text-[12px]" aria-hidden="true">
             <p>// food left</p>
           </div>
           <div id="food-dots" class="grid grid-cols-5 gap-4">

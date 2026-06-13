@@ -18,18 +18,26 @@ const isContact = currentPath.includes('/contact');
 <header class="w-full flex flex-col md:flex-row items-center bg-surface text-text-muted border-b border-border text-sm z-50">
   <!-- Brand / Sidebar Toggle Area -->
   <div class="w-full md:w-64 px-6 py-3 border-b md:border-b-0 md:border-r border-border flex justify-between items-center shrink-0">
-    <a href={`/?lang=${lang}`} class="hover:text-text transition-colors font-medium">
+    <a href={`/?lang=${lang}`} data-astro-prefetch class="hover:text-text transition-colors font-medium">
       juan-manuel-machado
     </a>
-    <button id="menu-toggle" class="md:hidden text-text-muted">
+    <button
+      id="menu-toggle"
+      aria-label={t.menuOpen}
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      class="md:hidden text-text-muted"
+    >
       <span class="material-symbols-outlined">menu</span>
     </button>
   </div>
 
   <!-- Desktop Tabs -->
-  <nav class="hidden md:flex flex-grow items-stretch overflow-x-auto no-scrollbar h-full">
+  <nav aria-label={t.navLabel} class="hidden md:flex flex-grow items-stretch overflow-x-auto no-scrollbar h-full">
     <a 
       href={`/?lang=${lang}`} 
+      aria-current={isHome ? 'page' : undefined}
+      data-astro-prefetch
       class={`px-6 py-3 border-r border-border transition-colors flex items-center gap-4 relative group ${isHome ? 'text-text bg-surface-elevated after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-primary' : 'hover:text-text hover:bg-surface-elevated/50'}`}
     >
       <span>{t.nav.home}</span>
@@ -37,6 +45,8 @@ const isContact = currentPath.includes('/contact');
     </a>
     <a 
       href={`/about?lang=${lang}`} 
+      aria-current={isAbout ? 'page' : undefined}
+      data-astro-prefetch
       class={`px-6 py-3 border-r border-border transition-colors flex items-center gap-4 relative group ${isAbout ? 'text-text bg-surface-elevated after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-primary' : 'hover:text-text hover:bg-surface-elevated/50'}`}
     >
       <span>{t.nav.about}</span>
@@ -44,6 +54,8 @@ const isContact = currentPath.includes('/contact');
     </a>
     <a 
       href={`/projects?lang=${lang}`} 
+      aria-current={isProjects ? 'page' : undefined}
+      data-astro-prefetch
       class={`px-6 py-3 border-r border-border transition-colors flex items-center gap-4 relative group ${isProjects ? 'text-text bg-surface-elevated after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-primary' : 'hover:text-text hover:bg-surface-elevated/50'}`}
     >
       <span>{t.nav.projects}</span>
@@ -55,6 +67,8 @@ const isContact = currentPath.includes('/contact');
   <div class="hidden md:flex items-stretch h-full">
     <a 
       href={`/contact?lang=${lang}`} 
+      aria-current={isContact ? 'page' : undefined}
+      data-astro-prefetch
       class={`px-6 py-3 border-l border-border transition-colors flex items-center gap-4 relative group ${isContact ? 'text-text bg-surface-elevated after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-primary' : 'hover:text-text hover:bg-surface-elevated/50'}`}
     >
       <span>{t.nav.contact}</span>
@@ -73,11 +87,11 @@ const isContact = currentPath.includes('/contact');
   </div>
 
   <!-- Mobile Nav -->
-  <nav id="mobile-nav" class="hidden w-full flex-col md:hidden bg-surface border-t border-border">
-    <a href={`/?lang=${lang}`} class={`px-6 py-4 border-b border-border ${isHome ? 'text-text bg-surface-elevated' : 'text-text-muted'}`}>{t.nav.home}</a>
-    <a href={`/about?lang=${lang}`} class={`px-6 py-4 border-b border-border ${isAbout ? 'text-text bg-surface-elevated' : 'text-text-muted'}`}>{t.nav.about}</a>
-    <a href={`/projects?lang=${lang}`} class={`px-6 py-4 border-b border-border ${isProjects ? 'text-text bg-surface-elevated' : 'text-text-muted'}`}>{t.nav.projects}</a>
-    <a href={`/contact?lang=${lang}`} class={`px-6 py-4 border-b border-border ${isContact ? 'text-text bg-surface-elevated' : 'text-text-muted'}`}>{t.nav.contact}</a>
+    <nav id="mobile-menu" aria-label={t.navLabel} class="hidden w-full flex-col md:hidden bg-surface border-t border-border">
+    <a href={`/?lang=${lang}`} data-astro-prefetch aria-current={isHome ? 'page' : undefined} class={`px-6 py-4 border-b border-border ${isHome ? 'text-text bg-surface-elevated' : 'text-text-muted'}`}>{t.nav.home}</a>
+    <a href={`/about?lang=${lang}`} data-astro-prefetch aria-current={isAbout ? 'page' : undefined} class={`px-6 py-4 border-b border-border ${isAbout ? 'text-text bg-surface-elevated' : 'text-text-muted'}`}>{t.nav.about}</a>
+    <a href={`/projects?lang=${lang}`} data-astro-prefetch aria-current={isProjects ? 'page' : undefined} class={`px-6 py-4 border-b border-border ${isProjects ? 'text-text bg-surface-elevated' : 'text-text-muted'}`}>{t.nav.projects}</a>
+    <a href={`/contact?lang=${lang}`} data-astro-prefetch aria-current={isContact ? 'page' : undefined} class={`px-6 py-4 border-b border-border ${isContact ? 'text-text bg-surface-elevated' : 'text-text-muted'}`}>{t.nav.contact}</a>
     <div class="px-6 py-4 flex items-center justify-between">
       <span class="text-text-muted text-xs font-mono">{t.language.select}</span>
       <select
@@ -96,7 +110,7 @@ const isContact = currentPath.includes('/contact');
     const select = document.getElementById('language-select') as HTMLSelectElement
     const selectMobile = document.getElementById('language-select-mobile') as HTMLSelectElement
     const menuToggle = document.getElementById('menu-toggle')
-    const mobileNav = document.getElementById('mobile-nav')
+    const mobileNav = document.getElementById('mobile-menu')
     
     const handleLangChange = (e: Event) => {
       const newLang = (e.target as HTMLSelectElement).value
@@ -110,6 +124,9 @@ const isContact = currentPath.includes('/contact');
 
     if (menuToggle && mobileNav) {
       menuToggle.addEventListener('click', () => {
+        const isOpen = menuToggle.getAttribute('aria-expanded') === 'true'
+        menuToggle.setAttribute('aria-expanded', String(!isOpen))
+        menuToggle.setAttribute('aria-label', isOpen ? 'Open menu' : 'Close menu')
         mobileNav.classList.toggle('hidden')
       })
     }

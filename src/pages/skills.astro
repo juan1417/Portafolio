@@ -54,7 +54,9 @@ const techIcons: Record<string, string> = {
 };
 ---
 
-<Base lang={lang}>
+<Base lang={lang} title="_skills | Juan Manuel Machado" description="Technical skills of Juan Manuel Machado: Python, JavaScript, React, Angular, Node.js, Flutter and more.">
+  <link slot="head" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" media="print" onload="this.media='all'" />
+  <link slot="head" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" media="print" onload="this.media='all'" />
     <main class="flex flex-col flex-grow px-4 py-16 max-w-6xl mx-auto w-full">
         <div class="text-center mb-12">
             <h1 class="text-text text-[3rem] md:text-[4rem] font-extrabold mb-4">{t.skill.title}</h1>

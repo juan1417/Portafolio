@@ -9,6 +9,14 @@ const t = getTranslations(lang);
 // Fetch repositories using the cached helper
 const { repos, fetchError } = await getRepos();
 
+const descriptionOverrides: Record<string, string> = {
+  'pruebas_unitarias': 'Unit test suite to validate business logic with code coverage tracking.',
+  'Taller_Calidad1': 'Software quality workshop applying coverage metrics and static analysis tools.',
+  'api-test': 'Integration test suite for REST APIs using automated testing tools.',
+  'Conf-Programing-pack': 'Personal dev environment config with VS Code extensions and custom snippets.',
+  'server': 'REST API built with NestJS — a progressive Node.js framework for scalable server-side applications.',
+}
+
 const langIcons: Record<string, string> = {
   JavaScript: "devicon-javascript-plain",
   TypeScript: "devicon-typescript-plain",
@@ -73,7 +81,8 @@ const allTechs: string[] = Array.from(
   .slice(0, 8);
 ---
 
-<Base lang={lang}>
+<Base lang={lang} title="_projects | Juan Manuel Machado" description="Software projects by Juan Manuel Machado: desktop apps, web platforms, e-commerce and mobile applications.">
+  <link slot="head" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" media="print" onload="this.media='all'" />
   <main class="flex-grow flex overflow-hidden h-full">
     <!-- Left Sidebar (Filters) -->
     <aside
@@ -126,7 +135,10 @@ const allTechs: string[] = Array.from(
       </div>
     </aside>
 
-    <!-- Main Content Area -->
+    {
+    Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=60')
+  }
+  <!-- Main Content Area -->
     <div class="flex-grow flex flex-col bg-surface overflow-hidden">
       <!-- Editor Tabs (Page Title) -->
       <div
@@ -181,6 +193,7 @@ const allTechs: string[] = Array.from(
                             {repo.images.map((img, i) => (
                               <img
                                 src={img}
+                                loading="lazy"
                                 alt={`${repo.name} screenshot ${i + 1}`}
                                 class={`slideshow-image absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${i === 0 ? "opacity-100" : "opacity-0"}`}
                                 data-index={i}
@@ -221,14 +234,14 @@ const allTechs: string[] = Array.from(
                       </div>
                       <div class="p-8 space-y-6 flex flex-col flex-grow">
                         <p class="text-text-muted text-[13px] leading-relaxed line-clamp-3 font-mono">
-                          {repo.readme ||
+                          {descriptionOverrides[repo.name] ||
                             repo.description ||
                             t.projects.noDescription}
                         </p>
                         <div class="mt-auto pt-4 flex items-center justify-between gap-4">
                           <a
                             href={repo.html_url}
-                            target="_blank"
+                            target="_blank" rel="noopener noreferrer"
                             class="px-5 py-2.5 bg-surface-elevated border border-border text-text rounded-lg text-xs hover:bg-surface transition-colors font-mono hover:border-secondary shrink-0"
                           >
                             view-project

@@ -1,14 +1,23 @@
 ---
+
 import Navegation from "../components/Navegation.astro";
 import Footer from "../components/Footer.astro";
 import '../style/style.css';
-import type { Language } from '../i18n/utils';
+import { getTranslations, type Language } from '../i18n/utils';
 
 interface Props {
-	lang?: Language;
+	title?: string
+	description?: string
+	lang?: Language
 }
 
-const { lang = 'en' } = Astro.props;
+const {
+	title = 'Juan Manuel Machado — Software Developer',
+	description = 'Portafolio de Juan Manuel Machado, desarrollador Full-Stack con experiencia en Python, JavaScript, React y Angular.',
+	lang = 'en'
+} = Astro.props
+
+const t = getTranslations(lang)
 ---
 
 <html lang={lang}>
@@ -16,24 +25,34 @@ const { lang = 'en' } = Astro.props;
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Juan Manuel Machado — Software Developer</title>
+		<meta name="generator" content="" />
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={Astro.url.href} />
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="Juan Manuel Machado" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<slot name="head" />
 		<!-- Google Fonts -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet" />
-		<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
-		<!-- Font Awesome -->
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-		<!-- Devicon - Iconos de tecnologías -->
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+		<!-- Font Awesome (non-blocking) -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'" />
+		<!-- Material Symbols (non-blocking) -->
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" media="print" onload="this.media='all'" />
 	</head>
 	<body class="bg-background min-h-screen font-['Fira_Code'] text-text overflow-x-hidden flex items-center justify-center p-0 md:p-8">
+		<a href="#main-content" class="skip-link">{t.skipLink}</a>
 		<div class="flex flex-col w-full h-full min-h-screen md:h-[calc(100vh-4rem)] md:min-h-[600px] max-w-[1440px] bg-surface border-0 md:border md:border-border md:rounded-lg overflow-hidden relative shadow-2xl">
 			<Navegation lang={lang}/>
 			<div class="flex-grow flex flex-col md:flex-row overflow-hidden">
 				<!-- Main Content Area -->
-				<main class="flex-grow overflow-y-auto overflow-x-hidden custom-scrollbar">
+				<main id="main-content" class="flex-grow overflow-y-auto overflow-x-hidden custom-scrollbar">
 					<slot />
 				</main>
 			</div>

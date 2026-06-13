@@ -12,7 +12,6 @@ export interface GitHubRepo {
   updated_at: string;
   fork: boolean;
   languages?: string[];
-  readme?: string;
   images?: string[];
 }
 
@@ -68,11 +67,9 @@ export async function getRepos(): Promise<{ repos: GitHubRepo[]; fetchError: boo
       filtered.map(async (repo) => {
         const safeTopics = Array.isArray(repo.topics) ? repo.topics : [];
         let languages: string[] = [];
-        let readme: string | undefined;
 
-        try {
-          // Fetch languages
-          if (repo.languages_url) {
+        if (repo.languages_url) {
+          try {
             const langRes = await fetch(repo.languages_url, {
               headers: { Accept: "application/vnd.github+json" },
             });
@@ -80,62 +77,12 @@ export async function getRepos(): Promise<{ repos: GitHubRepo[]; fetchError: boo
               const langData = (await langRes.json()) as Record<string, number>;
               languages = Object.keys(langData);
             }
+          } catch {
+            // Silently ignore fetch errors for individual repos
           }
-
-          // Fetch README and extract first paragraph
-          const readmeRes = await fetch(
-            `https://api.github.com/repos/juan1417/${repo.name}/readme`,
-            { headers: { Accept: "application/vnd.github+json" } }
-          );
-          if (readmeRes.ok) {
-            const readmeData = await readmeRes.json() as { content?: string; html_url?: string };
-            if (readmeData.content) {
-              // README content is base64 encoded — decode as UTF-8
-              const binary = atob(readmeData.content.replace(/\n/g, ''));
-              const decoded = new TextDecoder('utf-8').decode(
-                Uint8Array.from(binary, c => c.charCodeAt(0))
-              );
-              // Strip markdown: headers, links, code blocks, bold/italic, etc.
-              const cleaned = decoded
-                .replace(/^#+\s+/gm, '')          // remove headers
-                .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // links → text
-                .replace(/!\[([^\]]*)\]\([^)]+\)/g, '')  // images
-                .replace(/```[\s\S]*?```/g, '')     // code blocks
-                .replace(/`([^`]+)`/g, '$1')       // inline code
-                .replace(/<[^>]+>/g, '')           // strip HTML tags
-                .replace(/[*_`~>]/g, '')           // remaining markdown symbols
-                .replace(/\n+/g, ' ')              // collapse newlines
-                .trim();
-              // Extract first sentence/paragraph (stop at first period + newline or double newline)
-              const first = cleaned.split(/\.\s+/)[0].trim();
-              // Skip if description is too short or just the repo name
-              if (first.length > 30 && first.toLowerCase() !== repo.name.toLowerCase()) {
-                readme = first.slice(0, 300);
-              }
-            }
-          }
-        } catch {
-          // Silently ignore fetch errors for individual repos
         }
 
-        // Fetch images folder contents
-        let images: string[] = [];
-        try {
-          const imagesRes = await fetch(
-            `https://api.github.com/repos/juan1417/${repo.name}/contents/images`,
-            { headers: { Accept: "application/vnd.github+json" } }
-          );
-          if (imagesRes.ok) {
-            const imagesData = await imagesRes.json() as Array<{ name: string; type: string }>;
-            images = imagesData
-              .filter(f => f.type === "file" && /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(f.name))
-              .map(f => `https://raw.githubusercontent.com/juan1417/${repo.name}/main/images/${f.name}`);
-          }
-        } catch {
-          // ignore
-        }
-
-        return { ...repo, topics: safeTopics, languages, readme, images };
+        return { ...repo, topics: safeTopics, languages };
       })
     );
     // Update cache

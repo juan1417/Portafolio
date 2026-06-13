@@ -130,6 +130,15 @@
       }
     }
   },
+  "skipLink": "Skip to main content",
+  "navLabel": "Main navigation",
+  "menuOpen": "Open menu",
+  "menuClose": "Close menu",
+  "contactForm": {
+    "labelName": "Name",
+    "labelEmail": "Email",
+    "labelMessage": "Message"
+  },
   "language": {
     "select": "Language"
   },

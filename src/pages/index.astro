@@ -7,7 +7,7 @@ const lang = (Astro.url.searchParams.get('lang') || 'en') as Language;
 const t = getTranslations(lang)
 ---
 
-<Base lang={lang}>
+<Base lang={lang} title="Juan Manuel Machado — Software Developer" description="Portfolio of Juan Manuel Machado, Full-Stack Developer with experience in Python, JavaScript, React and Angular.">
   <main class="flex-grow flex flex-col xl:flex-row items-center justify-center p-6 md:p-12 gap-12 xl:gap-24 overflow-hidden relative min-h-full">
     <!-- Hero Content -->
     <div class="flex flex-col gap-10 z-10 w-full xl:w-auto max-w-2xl text-left">
@@ -20,17 +20,17 @@ const t = getTranslations(lang)
       </div>
 
       <div class="space-y-4 text-text-muted text-sm md:text-base font-mono mt-8">
-        <p>// {lang === 'en' ? 'complete the game to continue' : 'completa el juego para continuar'}</p>
-        <p>// {lang === 'en' ? 'you can also see it on my Github page' : 'también puedes verlo en mi página de Github'}</p>
+        <p aria-hidden="true">// {lang === 'en' ? 'complete the game to continue' : 'completa el juego para continuar'}</p>
+        <p aria-hidden="true">// {lang === 'en' ? 'you can also see it on my Github page' : 'también puedes verlo en mi página de Github'}</p>
         <p>
-          <span class="text-indigo">const</span> <span class="text-secondary">githubLink</span> = <a href="https://github.com/juan1417" target="_blank" class="text-rose hover:underline transition-all">"https://github.com/juan1417"</a>
+           <span class="text-indigo">const</span> <span class="text-secondary">githubLink</span> = <a href="https://github.com/juan1417" target="_blank" rel="noopener noreferrer" class="text-rose hover:underline transition-all">"https://github.com/juan1417"</a>
         </p>
       </div>
     </div>
 
     <!-- Functional Snake Game -->
     <div class="z-10 w-full xl:w-auto xl:max-w-none max-w-2xl flex justify-center">
-      <SnakeGame lang={lang} />
+      <SnakeGame lang={lang} client:visible />
     </div>
   </main>
 </Base>

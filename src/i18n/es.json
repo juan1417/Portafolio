@@ -139,6 +139,15 @@
       }
     }
   },
+  "skipLink": "Saltar al contenido principal",
+  "navLabel": "Navegación principal",
+  "menuOpen": "Abrir menú",
+  "menuClose": "Cerrar menú",
+  "contactForm": {
+    "labelName": "Nombre",
+    "labelEmail": "Correo",
+    "labelMessage": "Mensaje"
+  },
   "language": {
     "select": "Idioma"
   },
