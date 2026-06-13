@@ -30,7 +30,7 @@ const t = getTranslations(lang)
 		<meta name="description" content={description} />
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />
-		<meta property="og:url" content={Astro.url.href} />
+		<meta property="og:url" content={new URL(Astro.url.pathname, Astro.site)} />
 		<meta property="og:type" content="website" />
 		<meta property="og:site_name" content="Juan Manuel Machado" />
 		<meta name="twitter:card" content="summary_large_image" />
