@@ -67,6 +67,7 @@ export async function getRepos(): Promise<{ repos: GitHubRepo[]; fetchError: boo
       filtered.map(async (repo) => {
         const safeTopics = Array.isArray(repo.topics) ? repo.topics : [];
         let languages: string[] = [];
+        let images: string[] = [];
 
         if (repo.languages_url) {
           try {
@@ -82,7 +83,20 @@ export async function getRepos(): Promise<{ repos: GitHubRepo[]; fetchError: boo
           }
         }
 
-        return { ...repo, topics: safeTopics, languages };
+        try {
+          const contentsRes = await fetch(
+            `https://api.github.com/repos/juan1417/${repo.name}/contents/content`,
+            { headers: { Accept: "application/vnd.github+json" } }
+          )
+          if (contentsRes.ok) {
+            const files = await contentsRes.json() as { name: string; download_url: string }[]
+            images = files.filter(f => f.name.endsWith(".png")).map(f => f.download_url)
+          }
+        } catch {
+          // No content/ folder — silently skip
+        }
+
+        return { ...repo, topics: safeTopics, languages, images };
       })
     );
     // Update cache
