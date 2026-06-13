@@ -234,7 +234,8 @@ const allTechs: string[] = Array.from(
                       </div>
                       <div class="p-8 space-y-6 flex flex-col flex-grow">
                         <p class="text-text-muted text-[13px] leading-relaxed line-clamp-3 font-mono">
-                          {descriptionOverrides[repo.name] ||
+                          {repo.readme ||
+                            descriptionOverrides[repo.name] ||
                             repo.description ||
                             t.projects.noDescription}
                         </p>

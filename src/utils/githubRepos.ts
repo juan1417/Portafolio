@@ -13,6 +13,7 @@ export interface GitHubRepo {
   fork: boolean;
   languages?: string[];
   images?: string[];
+  readme?: string;
 }
 
 // Set of repositories we never want to display
@@ -83,6 +84,8 @@ export async function getRepos(): Promise<{ repos: GitHubRepo[]; fetchError: boo
           }
         }
 
+        let readme: string | undefined
+
         try {
           const contentsRes = await fetch(
             `https://api.github.com/repos/juan1417/${repo.name}/contents/content`,
@@ -96,7 +99,39 @@ export async function getRepos(): Promise<{ repos: GitHubRepo[]; fetchError: boo
           // No content/ folder — silently skip
         }
 
-        return { ...repo, topics: safeTopics, languages, images };
+        try {
+          const readmeRes = await fetch(
+            `https://api.github.com/repos/juan1417/${repo.name}/readme`,
+            { headers: { Accept: "application/vnd.github+json" } }
+          )
+          if (readmeRes.ok) {
+            const readmeData = await readmeRes.json() as { content?: string }
+            if (readmeData.content) {
+              const binary = atob(readmeData.content.replace(/\n/g, ''))
+              const decoded = new TextDecoder('utf-8').decode(
+                Uint8Array.from(binary, c => c.charCodeAt(0))
+              )
+              const cleaned = decoded
+                .replace(/^#+\s+/gm, '')
+                .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+                .replace(/!\[([^\]]*)\]\([^)]+\)/g, '')
+                .replace(/```[\s\S]*?```/g, '')
+                .replace(/`([^`]+)`/g, '$1')
+                .replace(/<[^>]+>/g, '')
+                .replace(/[*_`~>]/g, '')
+                .replace(/\n+/g, ' ')
+                .trim()
+              const first = cleaned.split(/\.\s+/)[0].trim()
+              if (first.length > 30 && first.toLowerCase() !== repo.name.toLowerCase()) {
+                readme = first.slice(0, 300)
+              }
+            }
+          }
+        } catch {
+          // No README — silently skip
+        }
+
+        return { ...repo, topics: safeTopics, languages, images, readme };
       })
     );
     // Update cache
