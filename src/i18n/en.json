@@ -7,7 +7,7 @@
   },
   "home": {
     "title": "Software Developer",
-    "paragraph": "Software engineering student with experience in web and desktop application development, and extensive knowledge in mobile application development as well as a deep understanding of maintenance, development, and design of relational and non-relational databases.",
+    "paragraph": "Full-Stack Developer with experience in web, desktop and mobile development. Proficient in Python, JavaScript, React, Angular, and Go. Skilled in relational and non-relational database design, API development, and cloud deployment.",
     "project": "View projects",
     "cv": "Download resume"
   },
@@ -99,12 +99,12 @@
     "header": {
       "name": "Juan Manuel Machado",
       "job": "Software Developer",
-      "paragraph": "I am a passionate developer with the ability to learn new things and work as a team.",
+      "paragraph": "Full-Stack Developer with professional experience building web apps, APIs, and mobile products.",
       "cv": "Download resume"
     },
     "journey": {
       "title": "About Me",
-      "about": "Advanced Software Engineering student with one year of professional experience as a Full-Stack Developer, with knowledge in backend development (Python, JavaScript) and frontend (React, Angular, PHP). I have a strong self-taught foundation, complemented by specialized training in Python. I am seeking an opportunity that allows me to apply my technical skills, agile mindset, and capacity for continuous learning.",
+      "about": "Full-Stack Developer with one year of professional experience building web applications, REST APIs, and mobile products. Specialized in Python and JavaScript ecosystems — React, Angular, Node.js, PHP. Built and deployed a Go backend on Railway for this portfolio. Open to full-time and freelance opportunities locally and internationally.",
       "subtitle": "Work Experience",
       "experience": {
         "SysBlue": {

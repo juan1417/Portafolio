@@ -7,7 +7,7 @@
   },
   "home": {
     "title": "Desarrollador de Software",
-    "paragraph": "Estudiante de ingeniería en software, con experiencia en el desarrollo de aplicaciones web, escritorio y con amplios conocimientos en el desarrollo de aplicaciones móviles, como también un profundo entendimiento de mantenimiento, desarrollo y diseño de bases de datos relacionales y no relacionales.",
+    "paragraph": "Desarrollador Full-Stack con experiencia en desarrollo web, escritorio y móvil. Competente en Python, JavaScript, React, Angular y Go. Hábil en diseño de bases de datos relacionales y no relacionales, desarrollo de APIs y despliegue en la nube.",
     "project": "Ver proyectos",
     "cv": "Descargar hoja de vida"
   },
@@ -108,12 +108,12 @@
     "header": {
       "name": "Juan Manuel Machado",
       "job": "Desarrollador de Software",
-      "paragraph": "Soy un desarrollador apasionado por el desarrollo con la capacidad de aprender cosas nuevas y trabajar en equipo.",
+      "paragraph": "Desarrollador Full-Stack con experiencia profesional construyendo apps web, APIs y productos móviles.",
       "cv": "Descargar hoja de vida"
     },
     "journey": {
       "title":"Sobre mí",
-      "about": "Estudiante avanzado de Ingeniería de Software con un año de experiencia profesional como Desarrollador Full-Stack, con conocimientos en desarrollo backend (Python, JavaScript) y frontend (React, Angular, PHP). Cuento con una sólida base autodidacta, complementada con formación especializada en Python. Busco una oportunidad que me permita aplicar mis habilidades técnicas, mi mentalidad ágil y mi capacidad de aprendizaje continuo.",
+      "about": "Desarrollador Full-Stack con un año de experiencia profesional construyendo aplicaciones web, APIs REST y productos móviles. Especializado en los ecosistemas de Python y JavaScript — React, Angular, Node.js, PHP. Construí y desplegué un backend en Go en Railway para este portafolio. Disponible para posiciones full-time y proyectos freelance, local e internacional.",
       "subtitle": "Experiencia laboral",
       "experience": {
         "SysBlue": {

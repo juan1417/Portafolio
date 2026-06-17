@@ -87,7 +87,25 @@ const skillIcons: Record<string, string> = {
         </div>
       </div>
 
-      <!-- Contacts Section -->
+        <!-- CV Download -->
+        <div class="border-b border-border">
+          <button class="folder-toggle w-full flex items-center gap-2 px-4 py-2 text-text text-sm hover:bg-surface-elevated transition-colors group font-mono" data-target="cv-files">
+            <i class="fa-solid fa-caret-down text-[10px] transition-transform duration-200"></i>
+            downloads
+          </button>
+          <div class="pb-2 space-y-0.5 hidden" id="cv-files">
+            <a href="/docs/cv-juan-manuel-machado.pdf" download class="w-full flex items-center gap-2 px-8 py-1 text-text-muted text-[13px] hover:text-text transition-colors">
+              <i class="fa-solid fa-file-pdf text-rose text-xs"></i>
+              cv-en.pdf
+            </a>
+            <a href="/docs/cv-juan-manuel-machado-es.pdf" download class="w-full flex items-center gap-2 px-8 py-1 text-text-muted text-[13px] hover:text-text transition-colors">
+              <i class="fa-solid fa-file-pdf text-rose text-xs"></i>
+              cv-es.pdf
+            </a>
+          </div>
+        </div>
+
+        <!-- Contacts Section -->
       <div>
         <button class="folder-toggle w-full flex items-center gap-2 px-4 py-2 text-text text-sm hover:bg-surface-elevated transition-colors group font-mono" data-target="contacts-files">
           <i class="fa-solid fa-caret-down text-[10px] transition-transform duration-200"></i>

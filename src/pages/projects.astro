@@ -9,8 +9,17 @@ const t = getTranslations(lang);
 // Fetch repositories using the cached helper
 const { repos, fetchError } = await getRepos(lang);
 
+const featuredProjects = new Set([
+  'MenuMaster', 'E-commerce', 'ProFinancas', 'MuelitasFelices',
+])
+
 const descriptionOverrides: Record<string, string> = {
-  'Taller_Calidad1': 'Software quality workshop applying coverage metrics and static analysis tools.',
+  'Taller_Calidad1': 'Software quality workshop applying coverage metrics, static analysis and automated testing best practices.',
+  'Pruebas-de-Carga-y-Estr-s-con-k6': 'Load and stress testing project using k6 to evaluate API performance under concurrent traffic.',
+  'openmusic': 'Flutter-based mobile music application with cross-platform support and audio playback features.',
+  'Creator_cv': 'Python-based CV/resume creator with customizable templates and PDF export functionality.',
+  'LLMtools': 'Toolkit for interacting with Large Language Models — prompt management, response parsing and API orchestration.',
+  'zeta': 'Low-level systems programming project in C++ exploring memory management and algorithm optimization.',
 }
 
 const langIcons: Record<string, string> = {
@@ -170,6 +179,7 @@ const allTechs: string[] = Array.from(
                     class="project-card space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500 group"
                     style={`animation-delay: ${index * 50}ms`}
                     data-techs={repoTechs.join(",")}
+                    data-featured={featuredProjects.has(repo.name) ? "true" : "false"}
                   >
                     <div class="flex items-center gap-2 mb-2 font-mono">
                       <span class="text-indigo font-bold text-sm">
@@ -178,6 +188,9 @@ const allTechs: string[] = Array.from(
                       <span class="text-text-muted text-sm">
                         // _{repo.name}
                       </span>
+                      {featuredProjects.has(repo.name) && (
+                        <span class="text-[10px] text-accent border border-accent/30 px-1.5 py-0.5 rounded font-bold tracking-wider">FEATURED</span>
+                      )}
                     </div>
                     <div class="bg-background/40 border border-border rounded-2xl overflow-hidden hover:border-text-muted transition-all flex flex-col h-full group-hover:shadow-2xl group-hover:shadow-secondary/5">
                       <div class="h-44 bg-surface-elevated/50 flex items-center justify-center relative overflow-hidden border-b border-border group/slide">
