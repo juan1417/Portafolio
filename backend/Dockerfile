@@ -3,12 +3,12 @@ FROM golang:1.26-alpine AS builder
 
 WORKDIR /app
 
-# Cache deps first
-COPY go.mod go.sum ./
+# Cache deps first — paths relative to repo root (build context)
+COPY backend/go.mod backend/go.sum ./
 RUN go mod download
 
 # Source
-COPY . .
+COPY backend/ .
 
 # Static binary
 RUN CGO_ENABLED=0 GOOS=linux go build -o server .
