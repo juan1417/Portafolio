@@ -1,0 +1,30 @@
+{{template "layout.html" .}}
+{{define "content"}}
+<p class="comment">// portfolio analytics dashboard</p>
+<h1 class="page-title">Dashboard</h1>
+<div class="stat-grid">
+  <div class="stat-card">
+    <p class="stat-label">total visits</p>
+    <p class="stat-value">{{.TotalVisits}}</p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-label">total contacts</p>
+    <p class="stat-value">{{.TotalContacts}}</p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-label">unread messages</p>
+    <p class="stat-value">{{.UnreadCount}}</p>
+  </div>
+</div>
+<p class="comment">// visits by page</p>
+<table>
+  <thead>
+    <tr><th>Page</th><th>Visits</th></tr>
+  </thead>
+  <tbody>
+    {{range $page, $count := .Stats}}
+    <tr><td>{{$page}}</td><td>{{$count}}</td></tr>
+    {{end}}
+  </tbody>
+</table>
+{{end}}

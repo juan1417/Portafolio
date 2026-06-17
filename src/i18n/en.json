@@ -137,7 +137,14 @@
   "contactForm": {
     "labelName": "Name",
     "labelEmail": "Email",
-    "labelMessage": "Message"
+    "labelMessage": "Message",
+    "submitButton": "submit-message",
+    "sending": "sending...",
+    "success": "✓ message sent successfully!",
+    "error": "✗ something went wrong, try again",
+    "required": "this field is required",
+    "invalidEmail": "invalid email format",
+    "minLength": "minimum 10 characters"
   },
   "language": {
     "select": "Language"

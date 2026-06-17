@@ -4,6 +4,9 @@ import { getTranslations, type Language } from "../i18n/utils";
 
 const lang = (Astro.url.searchParams.get("lang") || "en") as Language;
 const t = getTranslations(lang);
+
+// Backend URL — rendered into the form as a data attribute for the client script
+const apiUrl = import.meta.env.API_URL || import.meta.env.PUBLIC_API_URL || 'http://localhost:8080';
 ---
 
 <Base lang={lang} title="_contact-me | Juan Manuel Machado" description="Contact Juan Manuel Machado for job opportunities or software project collaborations.">
@@ -67,20 +70,25 @@ const t = getTranslations(lang);
       <div class="flex-grow flex flex-col lg:flex-row overflow-hidden h-full">
         <!-- Form Section -->
         <div class="flex-grow p-6 md:p-12 overflow-y-auto border-r border-border flex items-center justify-center custom-scrollbar">
-          <form action="https://formspree.io/f/xqeogvod" method="POST" class="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <input type="hidden" name="_language" value={lang} />
-            <input type="hidden" name="_next" value={"https://portafolio-codingspace.vercel.app/contact?lang=" + lang} />
+          <form
+            class="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500"
+            data-api-url={apiUrl}
+            data-required={t.contactForm.required}
+            data-invalid-email={t.contactForm.invalidEmail}
+            data-min-length={t.contactForm.minLength}
+            novalidate
+          >
             <div class="space-y-3">
               <label for="contact-name" class="sr-only">{t.contactForm.labelName}</label>
               <label for="contact-name" class="text-text-muted text-sm font-mono tracking-tight">_name:</label>
               <input 
                 type="text" 
                 id="contact-name"
-                name="name"
                 class="w-full bg-background/50 border border-border rounded-lg px-4 py-3 text-text-muted focus:border-text-muted focus:text-text outline-none transition-all font-mono text-sm shadow-inner"
                 placeholder="Juan Manuel"
                 required
               />
+              <p class="text-rose text-[11px] font-mono hidden" data-error="name"></p>
             </div>
             <div class="space-y-3">
               <label for="contact-email" class="sr-only">{t.contactForm.labelEmail}</label>
@@ -88,27 +96,39 @@ const t = getTranslations(lang);
               <input 
                 type="email" 
                 id="contact-email"
-                name="email"
                 class="w-full bg-background/50 border border-border rounded-lg px-4 py-3 text-text-muted focus:border-text-muted focus:text-text outline-none transition-all font-mono text-sm shadow-inner"
                 placeholder="juan@example.com"
                 required
               />
+              <p class="text-rose text-[11px] font-mono hidden" data-error="email"></p>
             </div>
             <div class="space-y-3">
               <label for="contact-message" class="sr-only">{t.contactForm.labelMessage}</label>
               <label for="contact-message" class="text-text-muted text-sm font-mono tracking-tight">_message:</label>
               <textarea 
                 id="contact-message"
-                name="message"
                 rows="4"
                 class="w-full bg-background/50 border border-border rounded-lg px-4 py-3 text-text-muted focus:border-text-muted focus:text-text outline-none transition-all resize-none font-mono text-sm shadow-inner"
                 placeholder="Your message here..."
                 required
                 minlength="10"
               ></textarea>
+              <p class="text-rose text-[11px] font-mono hidden" data-error="message"></p>
             </div>
-            <button class="px-6 py-2.5 bg-surface-elevated text-text border border-border rounded-lg text-sm hover:bg-background hover:border-secondary transition-all font-mono active:scale-95">
-              submit-message
+            <div
+              data-status
+              class="hidden"
+              data-success={t.contactForm.success}
+              data-error-global={t.contactForm.error}
+            >
+              <p class="text-sm font-mono" data-status-text></p>
+            </div>
+            <button
+              type="submit"
+              data-sending={t.contactForm.sending}
+              class="px-6 py-2.5 bg-surface-elevated text-text border border-border rounded-lg text-sm hover:bg-background hover:border-secondary transition-all font-mono active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {t.contactForm.submitButton}
             </button>
           </form>
         </div>
@@ -143,42 +163,148 @@ const t = getTranslations(lang);
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // --- Live code preview ---
       const nameInput = document.getElementById('contact-name') as HTMLInputElement
       const emailInput = document.getElementById('contact-email') as HTMLInputElement
       const messageInput = document.getElementById('contact-message') as HTMLTextAreaElement
-      const folderToggles = document.querySelectorAll('.folder-toggle');
-
       const codeName = document.getElementById('code-name')
       const codeEmail = document.getElementById('code-email')
       const codeMessage = document.getElementById('code-message')
-
-      folderToggles.forEach(toggle => {
-        toggle.addEventListener('click', () => {
-          const targetId = toggle.getAttribute('data-target');
-          if (!targetId) return;
-          const target = document.getElementById(targetId);
-          const icon = toggle.querySelector('i');
-          if (target) {
-            target.classList.toggle('hidden');
-          }
-          if (icon) {
-            icon.classList.toggle('rotate-[-90deg]');
-          }
-        });
-      });
 
       const updateCode = () => {
         if (codeName) codeName.textContent = nameInput.value
         if (codeEmail) codeEmail.textContent = emailInput.value
         if (codeMessage) codeMessage.textContent = messageInput.value
       }
-
       nameInput?.addEventListener('input', updateCode)
       emailInput?.addEventListener('input', updateCode)
       messageInput?.addEventListener('input', updateCode)
-      
-      // Initialize code preview
       updateCode()
+
+      // --- Folder toggles ---
+      const folderToggles = document.querySelectorAll('.folder-toggle')
+      folderToggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+          const targetId = toggle.getAttribute('data-target')
+          if (!targetId) return
+          const target = document.getElementById(targetId)
+          const icon = toggle.querySelector('i')
+          if (target) target.classList.toggle('hidden')
+          if (icon) icon.classList.toggle('rotate-[-90deg]')
+        })
+      })
+
+      // --- Contact form submission via Go backend ---
+      const form = document.querySelector('form')
+      if (!form) return
+
+      const apiUrl = form.dataset.apiUrl || 'http://localhost:8080'
+      const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement
+      const statusEl = form.querySelector('[data-status]') as HTMLDivElement
+      const statusText = form.querySelector('[data-status-text]') as HTMLParagraphElement
+      const errorEls = {
+        name: form.querySelector('[data-error="name"]') as HTMLParagraphElement,
+        email: form.querySelector('[data-error="email"]') as HTMLParagraphElement,
+        message: form.querySelector('[data-error="message"]') as HTMLParagraphElement,
+      }
+
+      // Grab translated strings from data attributes
+      const t = {
+        submitButton: submitBtn.textContent || 'submit-message',
+        sending: submitBtn.dataset.sending || 'sending...',
+        success: statusEl?.dataset.success || '✓ message sent successfully!',
+        error: statusEl?.dataset.errorGlobal || '✗ something went wrong, try again',
+        required: form.dataset.required || 'this field is required',
+        invalidEmail: form.dataset.invalidEmail || 'invalid email format',
+        minLength: form.dataset.minLength || 'minimum 10 characters',
+      }
+
+      const showError = (field: string, msg: string) => {
+        const el = errorEls[field as keyof typeof errorEls]
+        if (el) {
+          el.textContent = msg
+          el.classList.remove('hidden')
+        }
+      }
+
+      const clearErrors = () => {
+        Object.values(errorEls).forEach(el => {
+          if (el) el.classList.add('hidden')
+        })
+      }
+
+      const setStatus = (msg: string, isError: boolean) => {
+        if (!statusEl || !statusText) return
+        statusText.textContent = msg
+        statusText.className = `text-sm font-mono ${isError ? 'text-rose' : 'text-secondary'}`
+        statusEl.classList.remove('hidden')
+      }
+
+      const hideStatus = () => {
+        if (statusEl) statusEl.classList.add('hidden')
+      }
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault()
+        clearErrors()
+        hideStatus()
+
+        // Client-side validation
+        const name = nameInput.value.trim()
+        const email = emailInput.value.trim()
+        const content = messageInput.value.trim()
+        let valid = true
+
+        if (!name) {
+          showError('name', t.required || 'this field is required')
+          valid = false
+        }
+        if (!email) {
+          showError('email', t.required || 'this field is required')
+          valid = false
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          showError('email', t.invalidEmail || 'invalid email format')
+          valid = false
+        }
+        if (!content) {
+          showError('message', t.required || 'this field is required')
+          valid = false
+        } else if (content.length < 10) {
+          showError('message', t.minLength || 'minimum 10 characters')
+          valid = false
+        }
+        if (!valid) return
+
+        // Send
+        submitBtn.disabled = true
+        submitBtn.textContent = t.sending
+
+        try {
+          const res = await fetch(`${apiUrl}/api/contact`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, content }),
+          })
+
+          if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`)
+          }
+
+          const data = await res.json()
+          if (data.success) {
+            setStatus(t.success, false)
+            form.reset()
+            updateCode()
+          } else {
+            setStatus(data.error || t.error, true)
+          }
+        } catch {
+          setStatus(t.error, true)
+        } finally {
+          submitBtn.disabled = false
+          submitBtn.textContent = t.submitButton
+        }
+      })
     })
   </script>
 </Base>

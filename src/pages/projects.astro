@@ -7,7 +7,7 @@ const lang = (Astro.url.searchParams.get("lang") || "en") as Language;
 const t = getTranslations(lang);
 
 // Fetch repositories using the cached helper
-const { repos, fetchError } = await getRepos();
+const { repos, fetchError } = await getRepos(lang);
 
 const descriptionOverrides: Record<string, string> = {
   'Taller_Calidad1': 'Software quality workshop applying coverage metrics and static analysis tools.',

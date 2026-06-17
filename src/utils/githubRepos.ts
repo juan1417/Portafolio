@@ -1,19 +1,33 @@
-// Utility to fetch GitHub repositories with simple in‑memory caching
-// This is used by the Projects page to avoid refetching on every SSR request.
+// Utility to fetch GitHub repositories via the Go backend
+// Replaces the old direct-GitHub-API approach.
+
+// Define the shape returned by the backend
+interface BackendProject {
+  id: string
+  name: string
+  description: string
+  url: string
+  github_id: number
+  stars: number
+  topics: string[]
+  featured: boolean
+  cached_at: string
+  created_at: string
+}
 
 export interface GitHubRepo {
-  name: string;
-  description: string | null;
-  html_url: string;
-  homepage: string | null;
-  language: string | null;
-  languages_url?: string;
-  topics?: string[];
-  updated_at: string;
-  fork: boolean;
-  languages?: string[];
-  images?: string[];
-  readme?: string;
+  name: string
+  description: string | null
+  html_url: string
+  homepage: string | null
+  language: string | null
+  languages_url?: string
+  topics?: string[]
+  updated_at: string
+  fork: boolean
+  languages?: string[]
+  images?: string[]
+  readme?: string
 }
 
 // Set of repositories we never want to display
@@ -22,122 +36,102 @@ const EXCLUDED_REPOS = new Set([
   "Portafolio",
   "stunning-octo-chainsaw",
   "effective-octo-spork",
-]);
+])
 
-// Cache configuration – 5 minutes TTL (adjust as needed)
-const CACHE_TTL_MS = 5 * 60 * 1000;
+// Cache configuration – 5 minutes TTL
+const CACHE_TTL_MS = 5 * 60 * 1000
 interface CacheEntry {
-  repos: GitHubRepo[];
-  fetchedAt: number;
+  repos: GitHubRepo[]
+  fetchedAt: number
 }
-let cache: CacheEntry | null = null;
+let cache: CacheEntry | null = null
 
 /**
- * Fetch repositories from GitHub, applying filters and caching the result.
- * Returns an object with the repo list and a boolean indicating if a fetch error occurred.
+ * Reset the in-memory cache. Only used by tests — not part of the public API.
  */
-export async function getRepos(): Promise<{ repos: GitHubRepo[]; fetchError: boolean }> {
-  const now = Date.now();
+export function __testResetCache(): void {
+  cache = null
+}
+
+/**
+ * Resolve the backend URL.
+ * In dev mode the Go server runs on localhost:8080.
+ * In production, set the API_URL env variable (Vercel, Railway, etc.)
+ * Falls back to localhost:8080 so dev works out of the box.
+ */
+function getApiUrl(): string {
+  if (typeof import.meta !== 'undefined' && import.meta.env?.API_URL) {
+    return import.meta.env.API_URL
+  }
+  // Vite exposes PUBLIC_ vars to the client too — check both
+  if (typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_API_URL) {
+    return import.meta.env.PUBLIC_API_URL
+  }
+  return 'http://localhost:8080'
+}
+
+/**
+ * Fetch repositories from the Go backend, applying filters and caching.
+ */
+export async function getRepos(lang?: string): Promise<{ repos: GitHubRepo[]; fetchError: boolean }> {
+  const now = Date.now()
   if (cache && now - cache.fetchedAt < CACHE_TTL_MS) {
-    // Return cached data
-    return { repos: cache.repos, fetchError: false };
+    return { repos: cache.repos, fetchError: false }
   }
 
+  const apiUrl = getApiUrl()
+
   try {
-    const all: GitHubRepo[] = [];
-    let nextUrl = `https://api.github.com/users/juan1417/repos?per_page=100&sort=updated`;
-
-    while (nextUrl) {
-      const res = await fetch(nextUrl, {
-        headers: { Accept: "application/vnd.github+json" },
-      });
-      if (!res.ok) {
-        return { repos: [], fetchError: true };
-      }
-      const pageRepos: GitHubRepo[] = await res.json();
-      all.push(...pageRepos);
-
-      // Follow pagination Link header
-      const linkHeader = res.headers.get("Link") || "";
-      const nextMatch = linkHeader.match(/<([^>]+)>;\s*rel="next"/);
-      nextUrl = nextMatch ? nextMatch[1] : "";
+    // 1. Fetch projects from backend (pass lang so backend swaps description)
+    const projectsUrl = lang ? `${apiUrl}/api/projects?lang=${lang}` : `${apiUrl}/api/projects`
+    const res = await fetch(projectsUrl)
+    if (!res.ok) {
+      return { repos: [], fetchError: true }
     }
 
-    const filtered = all.filter((r) => !r.fork && !EXCLUDED_REPOS.has(r.name));
+    const projects: BackendProject[] = await res.json()
+
+    // 2. Filter excluded repos (the backend may already do this, but belt-and-suspenders)
+    const filtered = projects.filter((p) => !EXCLUDED_REPOS.has(p.name))
+
+    // 3. Enrich each project with screenshots
     const enriched = await Promise.all(
-      filtered.map(async (repo) => {
-        const safeTopics = Array.isArray(repo.topics) ? repo.topics : [];
-        let languages: string[] = [];
-        let images: string[] = [];
-
-        if (repo.languages_url) {
-          try {
-            const langRes = await fetch(repo.languages_url, {
-              headers: { Accept: "application/vnd.github+json" },
-            });
-            if (langRes.ok) {
-              const langData = (await langRes.json()) as Record<string, number>;
-              languages = Object.keys(langData);
-            }
-          } catch {
-            // Silently ignore fetch errors for individual repos
-          }
-        }
-
-        let readme: string | undefined
+      filtered.map(async (project) => {
+        let images: string[] = []
 
         try {
-          const contentsRes = await fetch(
-            `https://api.github.com/repos/juan1417/${repo.name}/contents/content`,
-            { headers: { Accept: "application/vnd.github+json" } }
-          )
-          if (contentsRes.ok) {
-            const files = await contentsRes.json() as { name: string; download_url: string }[]
-            images = files.filter(f => f.name.endsWith(".png")).map(f => f.download_url)
+          const imgRes = await fetch(`${apiUrl}/api/projects/${project.name}/screenshots`)
+          if (imgRes.ok) {
+            images = await imgRes.json()
           }
         } catch {
-          // No content/ folder — silently skip
+          // Best-effort
         }
 
-        try {
-          const readmeRes = await fetch(
-            `https://api.github.com/repos/juan1417/${repo.name}/readme`,
-            { headers: { Accept: "application/vnd.github+json" } }
-          )
-          if (readmeRes.ok) {
-            const readmeData = await readmeRes.json() as { content?: string }
-            if (readmeData.content) {
-              const binary = atob(readmeData.content.replace(/\n/g, ''))
-              const decoded = new TextDecoder('utf-8').decode(
-                Uint8Array.from(binary, c => c.charCodeAt(0))
-              )
-              const cleaned = decoded
-                .replace(/^#+\s+/gm, '')
-                .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-                .replace(/!\[([^\]]*)\]\([^)]+\)/g, '')
-                .replace(/```[\s\S]*?```/g, '')
-                .replace(/`([^`]+)`/g, '$1')
-                .replace(/<[^>]+>/g, '')
-                .replace(/[*_`~>]/g, '')
-                .replace(/\n+/g, ' ')
-                .trim()
-              const first = cleaned.split(/\.\s+/)[0].trim()
-              if (first.length > 30 && first.toLowerCase() !== repo.name.toLowerCase()) {
-                readme = first.slice(0, 300)
-              }
-            }
-          }
-        } catch {
-          // No README — silently skip
+        // topics from the backend already include both GitHub topics AND languages
+        const allTopics = project.topics || []
+
+        const repo: GitHubRepo = {
+          name: project.name,
+          description: project.description || null,
+          html_url: project.url,
+          homepage: null,
+          // primary language = first entry that looks like a language (starts with uppercase)
+          language: allTopics.find((t) => /^[A-Z]/.test(t)) || null,
+          topics: allTopics,
+          updated_at: project.cached_at,
+          fork: false,
+          languages: allTopics,
+          images,
         }
 
-        return { ...repo, topics: safeTopics, languages, images, readme };
-      })
-    );
-    // Update cache
-    cache = { repos: enriched, fetchedAt: now };
-    return { repos: enriched, fetchError: false };
+        return repo
+      }),
+    )
+
+    cache = { repos: enriched, fetchedAt: now }
+    return { repos: enriched, fetchError: false }
   } catch {
-    return { repos: [], fetchError: true };
+    return { repos: [], fetchError: true }
   }
 }

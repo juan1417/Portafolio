@@ -146,7 +146,14 @@
   "contactForm": {
     "labelName": "Nombre",
     "labelEmail": "Correo",
-    "labelMessage": "Mensaje"
+    "labelMessage": "Mensaje",
+    "submitButton": "enviar mensaje",
+    "sending": "enviando...",
+    "success": "✓ mensaje enviado con éxito",
+    "error": "✗ algo salió mal, inténtalo de nuevo",
+    "required": "este campo es obligatorio",
+    "invalidEmail": "formato de correo inválido",
+    "minLength": "mínimo 10 caracteres"
   },
   "language": {
     "select": "Idioma"
