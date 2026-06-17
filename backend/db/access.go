@@ -1,30 +1,33 @@
-package access
+package db
 
 import (
-		"github.com/joho/godotenv"
-		"log"
-		"os"
-		"context"
+	"context"
+	"fmt"
+	"os"
 
-		"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/joho/godotenv"
 )
 
-func getEnv() (string) {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
+// Connect builds a pgx connection pool against the Supabase DATABASE_URL.
+// main.go owns the pool lifecycle (defer db.Close) and passes it to repos.
+func Connect(ctx context.Context) (*pgxpool.Pool, error) {
+	_ = godotenv.Load()
+
+	url := os.Getenv("DATABASE_URL")
+	if url == "" {
+		return nil, fmt.Errorf("DATABASE_URL not set")
 	}
 
-	return os.Getenv("DATABASE_URL")	
-}
-
-
-func ConectDB() *pgx.Conn {
-	dbUrl := getEnv()
-	conn, err := pgx.Connect(context.Background(), dbUrl)
+	pool, err := pgxpool.New(ctx, url)
 	if err != nil {
-		log.Fatal("Error connecting to database")
+		return nil, fmt.Errorf("create pool: %w", err)
 	}
-	defer conn.Close(context.Background())
-	return conn
+
+	if err := pool.Ping(ctx); err != nil {
+		pool.Close()
+		return nil, fmt.Errorf("ping db: %w", err)
+	}
+
+	return pool, nil
 }

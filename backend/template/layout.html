@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Juan Manuel Machado</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Courier New', monospace; background: #1e1e1e; color: #d4d4d4; }
+    nav { background: #252526; border-bottom: 1px solid #3c3c3c; padding: 12px 24px;
+          display: flex; align-items: center; gap: 24px; }
+    nav a { color: #9cdcfe; text-decoration: none; font-size: 14px; }
+    nav a:hover { color: #fff; }
+    nav .logo { color: #4ec9b0; font-weight: bold; margin-right: auto; }
+    main { padding: 32px 24px; max-width: 1100px; margin: 0 auto; }
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                 gap: 16px; margin-bottom: 32px; }
+    .stat-card { background: #252526; border: 1px solid #3c3c3c; border-radius: 6px;
+                 padding: 20px; }
+    .stat-label { font-size: 12px; color: #858585; margin-bottom: 8px; }
+    .stat-value { font-size: 32px; font-weight: bold; color: #4ec9b0; }
+    table { width: 100%; border-collapse: collapse; background: #252526;
+            border: 1px solid #3c3c3c; border-radius: 6px; overflow: hidden; }
+    th { background: #2d2d2d; padding: 10px 14px; text-align: left;
+         font-size: 12px; color: #858585; letter-spacing: .05em; text-transform: uppercase; }
+    td { padding: 10px 14px; border-top: 1px solid #3c3c3c; font-size: 13px; }
+    .badge { display: inline-block; font-size: 11px; padding: 2px 8px;
+             border-radius: 3px; font-weight: 500; }
+    .badge-unread { background: #264f78; color: #9cdcfe; }
+    .badge-read { background: #2d2d2d; color: #858585; }
+    .badge-replied { background: #1e3a1e; color: #4ec9b0; }
+    .page-title { font-size: 18px; color: #fff; margin-bottom: 24px; }
+    .comment { color: #6a9955; font-size: 13px; margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+  <nav>
+    <span class="logo">// admin panel</span>
+    <a href="/admin/">dashboard</a>
+    <a href="/admin/contacts">contacts</a>
+    <a href="/admin/projects">projects</a>
+  </nav>
+  <main>
+    {{block "content" .}}{{end}}
+  </main>
+</body>
+</html>

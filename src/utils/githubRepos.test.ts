@@ -1,175 +1,246 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { getRepos, type GitHubRepo } from './githubRepos';
+import { getRepos, __testResetCache, type GitHubRepo } from './githubRepos';
 
-describe('githubRepos', () => {
-  describe('getRepos', () => {
-    const mockRepos: GitHubRepo[] = [
-      {
-        name: 'test-repo',
-        description: 'A test repository',
-        html_url: 'https://github.com/juan1417/test-repo',
-        homepage: 'https://test-repo.com',
-        language: 'TypeScript',
-        languages_url: 'https://api.github.com/repos/juan1417/test-repo/languages',
-        topics: ['typescript', 'react'],
-        updated_at: '2024-01-01T00:00:00Z',
-        fork: false,
-      },
-      {
-        name: 'Portafolio',
-        description: 'My portfolio',
-        html_url: 'https://github.com/juan1417/Portafolio',
-        homepage: null,
-        language: 'TypeScript',
-        topics: [],
-        updated_at: '2024-01-01T00:00:00Z',
-        fork: false,
-      },
-      {
-        name: 'juan1417',
-        description: 'My profile',
-        html_url: 'https://github.com/juan1417/juan1417',
-        homepage: null,
-        language: null,
-        topics: [],
-        updated_at: '2024-01-01T00:00:00Z',
-        fork: false,
-      },
-      {
-        name: 'forked-repo',
-        description: 'A forked repo',
-        html_url: 'https://github.com/juan1417/forked-repo',
-        homepage: null,
-        language: 'JavaScript',
-        topics: [],
-        updated_at: '2024-01-01T00:00:00Z',
-        fork: true,
-      },
-    ];
+const API = 'http://localhost:8080';
 
-    describe('EXCLUDED_REPOS', () => {
-      it('should exclude Portafolio, juan1417, and random generated names', () => {
-        expect(mockRepos.filter(r => !r.fork)).toHaveLength(3);
-      });
-    });
+const mockBackendProjects = [
+  {
+    id: '550e8400-e29b-41d4-a716-446655440001',
+    name: 'test-repo',
+    description: 'A test repository',
+    url: 'https://github.com/juan1417/test-repo',
+    github_id: 1,
+    stars: 5,
+    topics: ['TypeScript', 'React'],
+    featured: false,
+    cached_at: '2026-06-16T10:00:00Z',
+    created_at: '2026-01-01T00:00:00Z',
+  },
+  {
+    id: '550e8400-e29b-41d4-a716-446655440002',
+    name: 'Portafolio',
+    description: '',
+    url: 'https://github.com/juan1417/Portafolio',
+    github_id: 2,
+    stars: 0,
+    topics: ['Astro', 'TypeScript', 'CSS'],
+    featured: false,
+    cached_at: '2026-06-16T10:00:00Z',
+    created_at: '2026-01-01T00:00:00Z',
+  },
+  {
+    id: '550e8400-e29b-41d4-a716-446655440003',
+    name: 'juan1417',
+    description: '',
+    url: 'https://github.com/juan1417/juan1417',
+    github_id: 3,
+    stars: 0,
+    topics: [],
+    featured: false,
+    cached_at: '2026-06-16T10:00:00Z',
+    created_at: '2026-01-01T00:00:00Z',
+  },
+  {
+    id: '550e8400-e29b-41d4-a716-446655440004',
+    name: 'MenuMaster',
+    description: 'MenuMaster es una app de escritorio en C# para gestionar restaurantes.',
+    url: 'https://github.com/juan1417/MenuMaster',
+    github_id: 4,
+    stars: 0,
+    topics: ['C#', 'TSQL'],
+    featured: false,
+    cached_at: '2026-06-16T10:00:00Z',
+    created_at: '2026-01-01T00:00:00Z',
+  },
+]
 
-    describe('getRepos return structure', () => {
-      it('should return an object with repos array and fetchError boolean', async () => {
-        global.fetch = vi.fn().mockResolvedValue({
+/**
+ * Create a fetch mock that:
+ * - Returns projects from /api/projects
+ * - Returns screenshots from /api/projects/:name/screenshots (empty array by default)
+ */
+function mockFetch(screenshotMap?: Record<string, string[]>) {
+  const screenshots = screenshotMap || {}
+
+  return vi.fn().mockImplementation((url: string) => {
+    // Projects list
+    if (url === `${API}/api/projects`) {
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(mockBackendProjects),
+      })
+    }
+
+    // Screenshots by project name
+    const screenshotMatch = url.match(
+      new RegExp(`^${API}/api/projects/([^/]+)/screenshots$`),
+    )
+    if (screenshotMatch) {
+      const name = screenshotMatch[1]
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(screenshots[name] || []),
+      })
+    }
+
+    // Fallback: not found
+    return Promise.resolve({
+      ok: false,
+      status: 404,
+    })
+  }) as unknown as typeof fetch
+}
+
+describe('githubRepos (backend proxy)', () => {
+  beforeEach(() => {
+    __testResetCache()
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  describe('getRepos return structure', () => {
+    it('should return an object with repos array and fetchError boolean', async () => {
+      vi.stubGlobal('fetch', mockFetch())
+
+      const result = await getRepos()
+
+      expect(result).toHaveProperty('repos')
+      expect(result).toHaveProperty('fetchError')
+      expect(Array.isArray(result.repos)).toBe(true)
+      expect(typeof result.fetchError).toBe('boolean')
+    })
+
+    it('should return empty repos with fetchError true on API failure', async () => {
+      vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+        ok: false,
+        status: 500,
+      }))
+
+      const result = await getRepos()
+
+      expect(result.repos).toEqual([])
+      expect(result.fetchError).toBe(true)
+    })
+
+    it('should return empty repos with fetchError true on network error', async () => {
+      vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('Network error')))
+
+      const result = await getRepos()
+
+      expect(result.repos).toEqual([])
+      expect(result.fetchError).toBe(true)
+    })
+  })
+
+  describe('filtering', () => {
+    it('should exclude Portafolio, juan1417, stunning-octo-chainsaw, effective-octo-spork', async () => {
+      vi.stubGlobal('fetch', mockFetch())
+
+      const result = await getRepos()
+      const names = result.repos.map((r: GitHubRepo) => r.name)
+
+      expect(names).not.toContain('Portafolio')
+      expect(names).not.toContain('juan1417')
+      expect(names).not.toContain('stunning-octo-chainsaw')
+      expect(names).not.toContain('effective-octo-spork')
+    })
+  })
+
+  describe('data mapping', () => {
+    it('should map name, description, html_url correctly', async () => {
+      vi.stubGlobal('fetch', mockFetch())
+
+      const result = await getRepos()
+      const testRepo = result.repos.find((r: GitHubRepo) => r.name === 'test-repo')
+
+      expect(testRepo).toBeDefined()
+      expect(testRepo!.name).toBe('test-repo')
+      expect(testRepo!.description).toBe('A test repository')
+      expect(testRepo!.html_url).toBe('https://github.com/juan1417/test-repo')
+      expect(testRepo!.fork).toBe(false)
+    })
+
+    it('should map languages and topics from backend topics array', async () => {
+      vi.stubGlobal('fetch', mockFetch())
+
+      const result = await getRepos()
+      const testRepo = result.repos.find((r: GitHubRepo) => r.name === 'MenuMaster')
+
+      expect(testRepo).toBeDefined()
+      expect(testRepo!.languages).toEqual(['C#', 'TSQL'])
+      expect(testRepo!.topics).toEqual(['C#', 'TSQL'])
+    })
+
+    it('should determine primary language from topics', async () => {
+      vi.stubGlobal('fetch', mockFetch())
+
+      const result = await getRepos()
+      const testRepo = result.repos.find((r: GitHubRepo) => r.name === 'test-repo')
+
+      expect(testRepo!.language).toBe('TypeScript')
+    })
+
+    it('should use README description from backend when available', async () => {
+      vi.stubGlobal('fetch', mockFetch())
+
+      const result = await getRepos()
+      const menuMaster = result.repos.find((r: GitHubRepo) => r.name === 'MenuMaster')
+
+      expect(menuMaster!.description).toBe(
+        'MenuMaster es una app de escritorio en C# para gestionar restaurantes.',
+      )
+    })
+  })
+
+  describe('screenshots enrichment', () => {
+    it('should return empty images array when no screenshots exist', async () => {
+      vi.stubGlobal('fetch', mockFetch())
+
+      const result = await getRepos()
+      const testRepo = result.repos.find((r: GitHubRepo) => r.name === 'test-repo')
+
+      expect(testRepo!.images).toEqual([])
+    })
+
+    it('should include screenshots when available', async () => {
+      const screenshots = {
+        'MenuMaster': [
+          'https://raw.githubusercontent.com/juan1417/MenuMaster/main/content/img1.png',
+          'https://raw.githubusercontent.com/juan1417/MenuMaster/main/content/img2.png',
+        ],
+      }
+      vi.stubGlobal('fetch', mockFetch(screenshots))
+
+      const result = await getRepos()
+      const menuMaster = result.repos.find(
+        (r: GitHubRepo) => r.name === 'MenuMaster',
+      )
+
+      expect(menuMaster!.images).toHaveLength(2)
+      expect(menuMaster!.images![0]).toContain('img1.png')
+    })
+
+    it('should handle screenshots fetch failure gracefully', async () => {
+      const mock = vi.fn()
+        // First call: projects list succeeds
+        .mockResolvedValueOnce({
           ok: true,
-          json: async () => mockRepos,
-        }) as unknown as typeof fetch;
+          json: () => Promise.resolve(mockBackendProjects),
+        })
+        // Subsequent calls: screenshots fail
+        .mockRejectedValue(new Error('screenshots error'))
 
-        const result = await getRepos();
+      vi.stubGlobal('fetch', mock)
 
-        expect(result).toHaveProperty('repos');
-        expect(result).toHaveProperty('fetchError');
-        expect(Array.isArray(result.repos)).toBe(true);
-        expect(typeof result.fetchError).toBe('boolean');
-      });
+      const result = await getRepos()
+      const menuMaster = result.repos.find(
+        (r: GitHubRepo) => r.name === 'MenuMaster',
+      )
 
-      it('should return empty repos with fetchError true on API failure', async () => {
-        global.fetch = vi.fn().mockResolvedValue({
-          ok: false,
-          status: 403,
-        }) as unknown as typeof fetch;
-
-        const result = await getRepos();
-
-        expect(result.repos).toEqual([]);
-        expect(result.fetchError).toBe(true);
-      });
-
-      it('should return empty repos with fetchError true on network error', async () => {
-        global.fetch = vi.fn().mockRejectedValue(new Error('Network error'));
-
-        const result = await getRepos();
-
-        expect(result.repos).toEqual([]);
-        expect(result.fetchError).toBe(true);
-      });
-
-      it('should filter out forked repositories', async () => {
-        global.fetch = vi.fn().mockResolvedValue({
-          ok: true,
-          json: async () => mockRepos,
-        }) as unknown as typeof fetch;
-
-        const result = await getRepos();
-
-        const hasForked = result.repos.some(r => r.fork);
-        expect(hasForked).toBe(false);
-      });
-
-      it('should filter out excluded repositories', async () => {
-        global.fetch = vi.fn().mockResolvedValue({
-          ok: true,
-          json: async () => mockRepos,
-        }) as unknown as typeof fetch;
-
-        const result = await getRepos();
-
-        const repoNames = result.repos.map(r => r.name);
-        expect(repoNames).not.toContain('Portafolio');
-        expect(repoNames).not.toContain('juan1417');
-        expect(repoNames).not.toContain('stunning-octo-chainsaw');
-        expect(repoNames).not.toContain('effective-octo-spork');
-      });
-    });
-
-    describe('language enrichment', () => {
-      it('should handle repos without languages_url', async () => {
-        const reposWithoutLanguages = [
-          {
-            name: 'no-lang-repo',
-            description: 'No languages',
-            html_url: 'https://github.com/juan1417/no-lang-repo',
-            homepage: null,
-            language: null,
-            topics: ['test'],
-            updated_at: '2024-01-01T00:00:00Z',
-            fork: false,
-          },
-        ];
-
-        global.fetch = vi.fn().mockResolvedValue({
-          ok: true,
-          json: async () => reposWithoutLanguages,
-        }) as unknown as typeof fetch;
-
-        const result = await getRepos();
-
-        expect(result.repos[0].languages).toBeUndefined();
-        expect(result.repos[0].topics).toEqual(['test']);
-      });
-
-      it('should handle language fetch failure gracefully', async () => {
-        const reposWithLangUrl = [
-          {
-            name: 'test-repo',
-            description: 'Test',
-            html_url: 'https://github.com/juan1417/test-repo',
-            homepage: null,
-            language: 'JavaScript',
-            languages_url: 'https://api.github.com/repos/juan1417/test-repo/languages',
-            topics: [],
-            updated_at: '2024-01-01T00:00:00Z',
-            fork: false,
-          },
-        ];
-
-        global.fetch = vi.fn()
-          .mockResolvedValueOnce({
-            ok: true,
-            json: async () => reposWithLangUrl,
-          })
-          .mockRejectedValueOnce(new Error('Language fetch failed'));
-
-        const result = await getRepos();
-
-        expect(result.repos[0].languages).toBeUndefined();
-        expect(result.repos[0].topics).toEqual([]);
-      });
-    });
-  });
-});
+      expect(menuMaster!.images).toEqual([])
+      expect(result.fetchError).toBe(false)
+    })
+  })
+})

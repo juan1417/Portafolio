@@ -1,0 +1,38 @@
+{{template "layout.html" .}}
+{{define "content"}}
+<p class="comment">// manage featured projects shown in portfolio</p>
+<h1 class="page-title">Projects</h1>
+<table>
+  <thead>
+    <tr><th>Name</th><th>Stars</th><th>Featured</th></tr>
+  </thead>
+  <tbody>
+    {{range .Projects}}
+    <tr>
+      <td><a href="{{.URL}}" target="_blank" style="color:#9cdcfe">{{.Name}}</a></td>
+      <td>{{.Stars}}</td>
+      <td>
+        <button
+          onclick="toggleFeatured('{{.ID}}', {{.Featured}})"
+          style="background:{{if .Featured}}#1e3a1e{{else}}#2d2d2d{{end}};
+                 color:{{if .Featured}}#4ec9b0{{else}}#858585{{end}};
+                 border:1px solid #3c3c3c; padding:3px 10px;
+                 border-radius:3px; cursor:pointer; font-family:inherit">
+          {{if .Featured}}// featured{{else}}// not featured{{end}}
+        </button>
+      </td>
+    </tr>
+    {{end}}
+  </tbody>
+</table>
+<script>
+async function toggleFeatured(id, current) {
+  await fetch('/admin/projects/' + id + '/featured', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ featured: !current })
+  })
+  location.reload()
+}
+</script>
+{{end}}

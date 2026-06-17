@@ -1,48 +1,65 @@
 package models
 
-type Repositories struct {
-	Id		  int    `json:"id"`
-	Name      string `json:"name"`
-	HTMLURL   string `json:"html_url"`
-	LanguagesURL  string `json:"languages_url"`
-	ContentsURL   string `json:"contents_url"`
-}
+import "time"
 
-type Projects struct {
-	Id		  int    `json:"id"`
-	Name	  string `json:"name"`
-	Description string `json:"description"`
-	CreatedAt   string `json:"created_at"`
-	Github_id   int    `json:"github_id"`
-	Starts   string `json:"starts"`
-	Topics   []string `json:"topics"`
-	Features   []string `json:"features"`
-	Cached_at   string `json:"cached_at"`
-	URL         string `json:"url"`
+type Project struct {
+	ID            string    `json:"id"`
+	Name          string    `json:"name"`
+	Description   string    `json:"description"`
+	DescriptionEn string    `json:"-"`
+	URL           string    `json:"url"`
+	GithubID    int64     `json:"github_id"`
+	Stars       int       `json:"stars"`
+	Topics      []string  `json:"topics"`
+	Featured    bool      `json:"featured"`
+	CachedAt    time.Time `json:"cached_at"`
+	CreatedAt   time.Time `json:"created_at"`
 }
 
 type Contact struct {
-	Id		  int    `json:"id"`
-	Name	  string `json:"name"`
-	Email     string `json:"email"`
-	Content   string `json:"content"`
-	CreatedAt string `json:"created_at"`
-	Status    string `json:"status"`
-	Source	string `json:"source"`
+	ID        string    `json:"id"`
+	Name      string    `json:"name"`
+	Email     string    `json:"email"`
+	Content   string    `json:"content"`
+	Status    string    `json:"status"`
+	Source    string    `json:"source"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
-type admin_users struct {
-	Id		  int    `json:"id"`
-	Email	  string `json:"Email"`
-	Password_hash  string `json:"Password"`
-	Created_at string `json:"created_at"`
+type PageView struct {
+	ID        string    `json:"id"`
+	Page      string    `json:"page"`
+	Country   string    `json:"country"`
+	Referrer  string    `json:"referrer"`
+	UserAgent string    `json:"user_agent"`
+	VisitedAt time.Time `json:"visited_at"`
 }
 
-type page_views struct {
-	Id		  int    `json:"id"`
-	Page	  string `json:"page"`
-	Country     int    `json:"country"`
-	Referrer   string `json:"referrer"`
-	User_agent   string `json:"user_agent"`
-	Visited_at   string `json:"visited_at"`
+type AdminUser struct {
+	ID           string    `json:"id"`
+	Email        string    `json:"email"`
+	PasswordHash string    `json:"-"`
+	CreatedAt    time.Time `json:"created_at"`
+}
+
+// DTOs — what the API receives from the frontend
+type ContactRequest struct {
+	Name    string `json:"name" binding:"required"`
+	Email   string `json:"email" binding:"required,email"`
+	Content string `json:"content" binding:"required,min=10"`
+	Source  string `json:"source"`
+}
+
+type PageViewRequest struct {
+	Page     string `json:"page" binding:"required"`
+	Referrer string `json:"referrer"`
+}
+
+type LoginRequest struct {
+	Email    string `json:"email" binding:"required,email"`
+	Password string `json:"password" binding:"required"`
+}
+
+type LoginResponse struct {
+	Token string `json:"token"`
 }

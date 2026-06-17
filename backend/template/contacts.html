@@ -1,0 +1,22 @@
+{{template "layout.html" .}}
+{{define "content"}}
+<p class="comment">// messages received from portfolio contact form</p>
+<h1 class="page-title">Contacts</h1>
+<table>
+  <thead>
+    <tr><th>Name</th><th>Email</th><th>Message</th><th>Source</th><th>Status</th><th>Date</th></tr>
+  </thead>
+  <tbody>
+    {{range .Contacts}}
+    <tr>
+      <td>{{.Name}}</td>
+      <td>{{.Email}}</td>
+      <td>{{.Content}}</td>
+      <td>{{.Source}}</td>
+      <td><span class="badge badge-{{.Status}}">{{.Status}}</span></td>
+      <td>{{.CreatedAt.Format "2006-01-02 15:04"}}</td>
+    </tr>
+    {{end}}
+  </tbody>
+</table>
+{{end}}
