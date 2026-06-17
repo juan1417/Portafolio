@@ -5,7 +5,6 @@ import (
 	"html/template"
 	"log"
 	"os"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 
@@ -46,25 +45,10 @@ func main() {
 	// Gin router
 	r := gin.Default()
 
-	// CORS — allow portfolio frontends (production + preview deployments + local dev).
+	// CORS — only accept requests from the portfolio production frontend.
 	r.Use(func(c *gin.Context) {
 		origin := c.Request.Header.Get("Origin")
-		allowed := false
-		if origin != "" {
-			// Exact match via env var (production)
-			if origin == os.Getenv("ALLOWED_ORIGIN") {
-				allowed = true
-			}
-			// Local dev
-			if origin == "http://localhost:4321" || origin == "http://localhost:3000" {
-				allowed = true
-			}
-			// Any Vercel preview / production deployment
-			if strings.HasSuffix(origin, ".vercel.app") {
-				allowed = true
-			}
-		}
-		if allowed {
+		if origin == os.Getenv("ALLOWED_ORIGIN") {
 			c.Header("Access-Control-Allow-Origin", origin)
 		}
 		c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS")
